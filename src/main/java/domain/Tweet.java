@@ -60,9 +60,4 @@ public class Tweet {
     {
         this.likes.add(like);
     }
-
-    void assertEquals(Tweet expectedTweet0, Tweet tweet0) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
 }
