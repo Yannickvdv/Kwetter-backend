@@ -81,6 +81,16 @@ public class User {
         this.followers.remove(follower);
     }
     
+    public void addFollowing(User following) {
+        if(!following.equals(this)) {
+            this.following.add(following);
+        }
+    }
+    
+    public void removeFollowing (User following){
+        this.following.remove(following);
+    }
+    
     /* - Getters and Setters - */
     public String getName() {
         return name;
