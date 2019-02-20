@@ -5,6 +5,7 @@
  */
 package domain;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -14,14 +15,30 @@ import java.util.List;
 public class HashTag {
     
     private String text;
-    private List<Tweet> HashTags;
+    private List<Tweet> tweets;
 
     public HashTag(){
     }
     
+    public HashTag(String text, Tweet tweet){
+        this.text = text;
+        this.tweets = Arrays.asList(tweet);
+    }
+    
     public HashTag(String text, List<Tweet> HashTags) {
         this.text = text;
-        this.HashTags = HashTags;
+        this.tweets = HashTags;
+    }
+    
+    /**
+     * If a {@link Tweet} uses this {@link HashTag}, add it to the list
+     * 
+     * @param tweet The {@link Tweet} to add to the {@link HashTag}
+     */
+    public void addTweet(Tweet tweet) {
+        if(!this.tweets.contains(tweet)){
+            this.tweets.add(tweet);
+        }
     }
     
     public String getText() {
@@ -33,10 +50,10 @@ public class HashTag {
     }
 
     public List<Tweet> getHashTags() {
-        return HashTags;
+        return tweets;
     }
 
     public void setHashTags(List<Tweet> HashTags) {
-        this.HashTags = HashTags;
+        this.tweets = HashTags;
     }
 }

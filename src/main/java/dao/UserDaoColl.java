@@ -5,6 +5,7 @@
  */
 package dao;
 
+import domain.Tweet;
 import domain.User;
 import domain.enums.Role;
 import java.util.ArrayList;
@@ -80,5 +81,13 @@ public class UserDaoColl {
     public void unfollow(User unfollower, User user){
         this.getUser(user.getName()).removeFollower(unfollower);
         this.getUser(unfollower.getName()).removeFollowing(user);
+    }
+    
+    public List<Tweet> getAllTweets(){
+        List<Tweet> tweets = new ArrayList<>();
+        this.users.forEach((User u) ->{
+            tweets.addAll(u.getTweets());
+        });
+        return tweets;
     }
 }

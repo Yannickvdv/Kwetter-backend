@@ -10,11 +10,13 @@ import domain.enums.Language;
 import domain.enums.Role;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.Data;
 
 /**
  *
  * @author Yannick
  */
+@Data
 public class User {
    
     private String name;
@@ -91,92 +93,11 @@ public class User {
         this.following.remove(following);
     }
     
-    /* - Getters and Setters - */
-    public String getName() {
-        return name;
+    public void addTweet (Tweet tweet) {
+        this.tweets.add(tweet);
     }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
-    public String getWebsite() {
-        return website;
-    }
-
-    public void setWebsite(String website) {
-        this.website = website;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getBio() {
-        return bio;
-    }
-
-    public void setBio(String bio) {
-        this.bio = bio;
-    }
-
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
-
-    public Language getLanguage() {
-        return language;
-    }
-
-    public void setLanguage(Language language) {
-        this.language = language;
-    }
-
-    public ByteArray getPhoto() {
-        return photo;
-    }
-
-    public void setPhoto(ByteArray photo) {
-        this.photo = photo;
-    }
-
-    public List<Tweet> getTweets() {
-        return tweets;
-    }
-
-    public List<Tweet> getMentions() {
-        return mentions;
-    }
-
-    public void setMentions(List<Tweet> mentions) {
-        this.mentions = mentions;
-    }
-
-    public List<User> getFollowing() {
-        return following;
-    }
-
-    public void setFollowing(List<User> following) {
-        this.following = following;
-    }
-
-    public List<User> getFollowers() {
-        return followers;
+    
+    public void addMention (Tweet tweet) {
+        this.mentions.add(tweet);
     }
 }

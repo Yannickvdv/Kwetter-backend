@@ -5,6 +5,7 @@
  */
 package domain;
 
+import domain.enums.Language;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -14,7 +15,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  *
@@ -23,12 +23,11 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 public class TweetTest {
     
     private User user0;
-    private Date date;
     private Tweet tweet;
     
     public TweetTest() {
-        this.date = new Date();
-        this.tweet = new Tweet("Tweet", this.date);
+        this.user0 = new User("Bert", "Password0", Language.English);
+        this.tweet = new Tweet("Tweet", this.user0);
     }
     
     @BeforeClass
