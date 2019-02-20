@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package domain;
+package domain.helpers;
 
+import domain.User;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;

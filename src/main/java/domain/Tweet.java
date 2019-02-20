@@ -8,6 +8,7 @@ package domain;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import lombok.Getter;
 
 /**
  *
@@ -15,8 +16,11 @@ import java.util.List;
  */
 public class Tweet {
     
+    @Getter
     private String text;
+    @Getter
     private User user;
+    @Getter
     private Date insertedAt;
     private List<User> likes;   
     
@@ -30,7 +34,7 @@ public class Tweet {
         this.user = user;
         this.likes = new ArrayList();
         
-        this.user.addTweet(this);
+        this.user.tweet(this);
     }
       
     public Tweet(String text, User user, Date insertedAt, List<User> likes){
@@ -39,43 +43,19 @@ public class Tweet {
         this.user = user;
         this.likes = likes;
         
-        this.user.addTweet(this);
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
-
-    public Date getInsertedAt() {
-        return insertedAt;
-    }
-
-    public void setInsertedAt(Date insertedAt) {
-        this.insertedAt = insertedAt;
-    }
-
-    public User getUser(){
-        return user;
-    }               
-    
-    public void setUser(User user){
-        this.user = user;
+        this.user.tweet(this);
     }
     
-    public List<User> getLikes() {
-        return likes;
-    }
-    
-    public void setLikes(List<User> likes) {
-        this.likes = likes;
-    }
-    
-    public void addLike(User like)
+    public void like(User like)
     {
-        this.likes.add(like);
+        if (!this.likes.contains(user)) {
+            this.likes.add(like);
+        } else {
+            this.likes.remove(like);
+        }
+    }
+    
+    public int getLikesCount() {
+        return this.likes.size();
     }
 }

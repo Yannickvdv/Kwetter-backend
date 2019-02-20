@@ -10,11 +10,13 @@ import domain.User;
 import domain.enums.Role;
 import java.util.ArrayList;
 import java.util.List;
+import javax.enterprise.context.ApplicationScoped;
 
 /**
  *
  * @author Yannick
  */
+@ApplicationScoped
 public class UserDaoColl {
     
     private List<User> users = new ArrayList<>();

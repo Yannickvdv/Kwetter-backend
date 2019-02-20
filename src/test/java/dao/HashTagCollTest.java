@@ -7,6 +7,8 @@ package dao;
  */
 
 import dao.HashTagDaoColl;
+import domain.HashTag;
+import java.util.Arrays;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -42,9 +44,11 @@ public class HashTagCollTest {
     public void tearDown() {
     }
 
-    // TODO add test methods here.
-    // The methods must be annotated with annotation @Test. For example:
-    //
-    // @Test
-    // public void hello() {}
+    @Test
+    public void hashTagsTest() {
+        HashTag hashTag = new HashTag("test", null);
+         
+        this.hashTagDaoColl.addHashTag(hashTag);
+        assertEquals(Arrays.asList(hashTag), this.hashTagDaoColl.getHashTags());
+    }
 }

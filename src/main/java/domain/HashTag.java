@@ -7,6 +7,7 @@ package domain;
 
 import java.util.Arrays;
 import java.util.List;
+import lombok.Getter;
 
 /**
  *
@@ -14,7 +15,9 @@ import java.util.List;
  */
 public class HashTag {
     
+    @Getter
     private String text;
+    @Getter
     private List<Tweet> tweets;
 
     public HashTag(){
@@ -25,10 +28,6 @@ public class HashTag {
         this.tweets = Arrays.asList(tweet);
     }
     
-    public HashTag(String text, List<Tweet> HashTags) {
-        this.text = text;
-        this.tweets = HashTags;
-    }
     
     /**
      * If a {@link Tweet} uses this {@link HashTag}, add it to the list
@@ -39,21 +38,5 @@ public class HashTag {
         if(!this.tweets.contains(tweet)){
             this.tweets.add(tweet);
         }
-    }
-    
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
-
-    public List<Tweet> getHashTags() {
-        return tweets;
-    }
-
-    public void setHashTags(List<Tweet> HashTags) {
-        this.tweets = HashTags;
     }
 }

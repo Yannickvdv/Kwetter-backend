@@ -8,19 +8,24 @@ package service;
 import dao.HashTagDaoColl;
 import dao.UserDaoColl;
 import domain.HashTag;
-import domain.TextHelper;
+import domain.helpers.TextHelper;
 import domain.Tweet;
 import domain.User;
 import java.util.List;
+import javax.ejb.Stateless;
+import javax.inject.Inject;
 
 /**
  *
  * @author Yannick
  */
+@Stateless
 public class TweetService {
     
-    public HashTagDaoColl hDAO = new HashTagDaoColl();
-    public UserDaoColl uDAO = new UserDaoColl();
+    @Inject
+    public HashTagDaoColl hDAO;
+    @Inject
+    public UserDaoColl uDAO;
     
     /**
      * Add a new {@link Tweet} to an existing {@link User}

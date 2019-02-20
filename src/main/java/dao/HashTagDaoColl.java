@@ -8,11 +8,13 @@ package dao;
 import domain.HashTag;
 import java.util.ArrayList;
 import java.util.List;
+import javax.enterprise.context.ApplicationScoped;
 
 /**
  *
  * @author Yannick
  */
+@ApplicationScoped
 public class HashTagDaoColl {
     
     private List<HashTag> HashTags = new ArrayList<>();

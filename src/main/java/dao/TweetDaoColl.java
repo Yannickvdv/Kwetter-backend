@@ -8,11 +8,13 @@ package dao;
 import domain.Tweet;
 import java.util.ArrayList;
 import java.util.List;
+import javax.enterprise.context.ApplicationScoped;
 
 /**
  *
  * @author Yannick
  */
+@ApplicationScoped
 public class TweetDaoColl {
     
     private List<Tweet> tweets = new ArrayList<>();
