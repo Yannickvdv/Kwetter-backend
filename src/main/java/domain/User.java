@@ -5,65 +5,90 @@
  */
 package domain;
 
-import com.sun.mail.iap.ByteArray;
 import domain.enums.Language;
 import domain.enums.Role;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.Data;
+import javax.json.bind.annotation.JsonbTransient;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
 
 /**
  *
  * @author Yannick
  */
-public class User {
-   
+@Entity
+@Table(name = "users")
+public class User implements Serializable {
     
-    @Getter @Setter private String name;
-    @Getter @Setter private String location;
-    @Getter @Setter private String website;
-    @Getter @Setter private String password;
-    @Getter @Setter private String bio;
-    @Getter @Setter private Role role;
-    @Getter @Setter private Language language;
-    @Getter @Setter private ByteArray photo;
+    @Getter
+    @Id
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "org.hibernate.id.UUIDGenerator")
+    String userId;
     
-    @Getter private List<Tweet> tweets;
-    @Getter private List<Tweet> mentions;
-    
-    @Getter private List<User> following;
-    @Getter private List<User> followers;
 
-    public User() {
-    }
+    @Getter @Setter 
+    @Column(nullable = false, unique = true)
+    private String name;
+    @Getter @Setter 
+    private String location;
+    @Getter @Setter 
+    private String website;
+    @Getter @Setter 
+    @Column(nullable = false)
+    private String password;
+    @Getter @Setter
+    @Column(length = 160)
+    private String bio;
+    @Getter @Setter
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Role role;
+    @Getter @Setter 
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Language language;
+    @Getter @Setter 
+    private byte[] photo;
+    
+    @Getter 
+    @JsonbTransient
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    private List<Tweet> tweets;
+    @Getter 
+    @OneToMany
+    private List<Tweet> mentions;
+    
+    @Getter 
+    @OneToMany
+    @JsonbTransient
+    private List<User> following;
+    @Getter 
+    @OneToMany
+    @JsonbTransient
+    private List<User> followers;
     
     public User(String name, String password, Language language){
-        this.tweets = new ArrayList();
-        this.mentions = new ArrayList();
-        
-        this.following = new ArrayList();
-        this.followers = new ArrayList();
+        this.tweets = new ArrayList<>();
+        this.mentions = new ArrayList<>();
+        this.following = new ArrayList<>();
+        this.followers = new ArrayList<>();
         
         this.name = name;
         this.password = password;
         this.language = language;
-    }
-    
-    public User(String name, String location, String website, String password, String bio, Role role, Language language, ByteArray photo, List<Tweet> tweets, List<Tweet> mentions, List<User> following, List<User> followers) {
-        this.name = name;
-        this.location = location;
-        this.website = website;
-        this.password = password;
-        this.bio = bio;
-        this.role = role;
-        this.language = language;
-        this.photo = photo;
-        this.tweets = tweets;
-        this.mentions = mentions;
-        this.following = following;
-        this.followers = followers;
     }
     
     /**

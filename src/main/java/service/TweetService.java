@@ -5,12 +5,13 @@
  */
 package service;
 
-import dao.HashTagDaoColl;
-import dao.UserDaoColl;
+import dao.hashtag.HashTagDao;
+import dao.tweet.TweetDao;
+import dao.user.UserDao;
 import domain.HashTag;
-import domain.helpers.TextHelper;
 import domain.Tweet;
 import domain.User;
+import domain.helpers.TextHelper;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -23,9 +24,14 @@ import javax.inject.Inject;
 public class TweetService {
     
     @Inject
-    public HashTagDaoColl hDAO;
+    private HashTagDao hashTagDAO;
     @Inject
-    public UserDaoColl uDAO;
+    private UserDao userDAO;
+    @Inject
+    private TweetDao tweetDAO;
+    
+    public TweetService() {
+    }
     
     /**
      * Add a new {@link Tweet} to an existing {@link User}
@@ -36,8 +42,9 @@ public class TweetService {
     public void tweet(Tweet tweet) {
         //Add Tweets to the existing HashTags
         List<String> usedHashTags = TextHelper.searchHashTags(tweet.getText());
-        List<HashTag> availableHashTags = this.hDAO.getHashTags();
+        List<HashTag> availableHashTags = this.hashTagDAO.getHashTags();
         
+        //Loop through used hastags and add tweet to them if applicable
         for(int i = 0; i < usedHashTags.size(); i++){
             for(int j = 0; j < availableHashTags.size(); j++){
                 if(usedHashTags.get(i).equals(availableHashTags.get(j))){
@@ -51,12 +58,16 @@ public class TweetService {
         
         //Add new HashTags
         usedHashTags.forEach((String s) -> {
-            this.hDAO.addHashTag(new HashTag(s, tweet));
+            this.hashTagDAO.addHashTag(new HashTag(s, tweet));
         });
         
         //Add the mentions to the user
-        TextHelper.searchMentionedUsers(tweet.getText(), this.uDAO.getUsers()).forEach((User u) -> {
+        TextHelper.searchMentionedUsers(tweet.getText(), this.userDAO.getUsers()).forEach((User u) -> {
             u.addMention(tweet);
         });
+    }
+    
+    public List<Tweet> getTweets() {
+        return this.tweetDAO.getTweets();
     }
 }

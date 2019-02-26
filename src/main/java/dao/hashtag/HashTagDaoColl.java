@@ -3,36 +3,36 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package dao;
+package dao.hashtag;
 
 import domain.HashTag;
 import java.util.ArrayList;
 import java.util.List;
-import javax.enterprise.context.ApplicationScoped;
+import javax.ejb.Stateless;
+import javax.enterprise.inject.Default;
 
 /**
  *
  * @author Yannick
  */
-@ApplicationScoped
-public class HashTagDaoColl {
+@Stateless @Default
+public class HashTagDaoColl implements HashTagDao{
     
     private List<HashTag> HashTags = new ArrayList<>();
     
-    /**
-     * 
-     * @return Return all {@link HashTag}
-     */
+    @Override
     public List<HashTag> getHashTags() {
         return this.HashTags;
     }
     
-    /**
-     * Add {@link HashTag}
-     * 
-     * @param hashTag The {@link HashTag} to be added
-     */
+    @Override
     public void addHashTag(HashTag hashTag) {
         this.HashTags.add(hashTag);
     }
+
+    @Override
+    public HashTag findByName(String name) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }

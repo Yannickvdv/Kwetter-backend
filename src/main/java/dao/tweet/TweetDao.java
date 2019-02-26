@@ -3,27 +3,21 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package dao;
+package dao.tweet;
 
 import domain.Tweet;
-import java.util.ArrayList;
 import java.util.List;
-import javax.enterprise.context.ApplicationScoped;
 
 /**
  *
  * @author Yannick
  */
-@ApplicationScoped
-public class TweetDaoColl {
-    
-    private List<Tweet> tweets = new ArrayList<>();
-    
+public interface TweetDao {
+
     /**
-     * 
+     *
      * @return The existing tweets
      */
-    public List<Tweet> getTweets() {
-        return tweets;
-    }
+    List<Tweet> getTweets();
+    
 }

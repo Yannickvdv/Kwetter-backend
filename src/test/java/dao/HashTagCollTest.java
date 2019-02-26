@@ -6,7 +6,7 @@ package dao;
  * and open the template in the editor.
  */
 
-import dao.HashTagDaoColl;
+import dao.hashtag.HashTagDaoColl;
 import domain.HashTag;
 import java.util.Arrays;
 import org.junit.After;

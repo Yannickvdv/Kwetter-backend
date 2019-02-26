@@ -1,2 +1,2 @@
 FROM airhacks/glassfish
-COPY ./target/Kwetter.war ${DEPLOYMENT_DIR}
+COPY ./target/kwetter.war ${DEPLOYMENT_DIR}

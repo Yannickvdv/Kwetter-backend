@@ -5,6 +5,7 @@
  */
 package dao;
 
+import dao.user.UserDaoColl;
 import domain.User;
 import domain.enums.Language;
 import java.util.Arrays;

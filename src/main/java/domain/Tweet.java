@@ -5,23 +5,50 @@
  */
 package domain;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import lombok.Getter;
+import org.hibernate.annotations.GenericGenerator;
 
 /**
  *
  * @author Yannick
  */
-public class Tweet {
+@Entity
+@Table(name = "tweets")
+public class Tweet implements Serializable {
     
     @Getter
+    @Id
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "org.hibernate.id.UUIDGenerator")
+    private String kweetId;
+    
+    @Getter
+    @Column(length = 140)
     private String text;
     @Getter
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "userId")
     private User user;
     @Getter
+    @Temporal(TemporalType.DATE)
     private Date insertedAt;
+    
+    @OneToMany
     private List<User> likes;   
     
     public Tweet() {
