@@ -5,68 +5,111 @@
  */
 package domain;
 
-import com.sun.mail.iap.ByteArray;
 import domain.enums.Language;
 import domain.enums.Role;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import javax.json.bind.annotation.JsonbTransient;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
 
 /**
  *
  * @author Yannick
  */
-public class User {
-   
-    private String name;
-    private String location;
-    private String website;
-    private String password;
-    private String bio;
-    private Role role;
-    private Language language;
-    private ByteArray photo;
+@Entity
+@Table(name = "users")
+public class User implements Serializable {
     
+    @Getter
+    @Id
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "org.hibernate.id.UUIDGenerator")
+    String userId;
+    
+
+    @Getter @Setter 
+    @Column(nullable = false, unique = true)
+    private String name;
+    @Getter @Setter 
+    private String location;
+    @Getter @Setter 
+    private String website;
+    @Getter @Setter 
+    @Column(nullable = false)
+    private String password;
+    @Getter @Setter
+    @Column(length = 160)
+    private String bio;
+    @Getter @Setter
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Role role;
+    @Getter @Setter 
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Language language;
+    @Getter @Setter 
+    private byte[] photo;
+    
+    @Getter 
+    @JsonbTransient
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<Tweet> tweets;
+    @Getter 
+    @OneToMany
     private List<Tweet> mentions;
     
+    @Getter 
+    @OneToMany
+    @JsonbTransient
     private List<User> following;
+    @Getter 
+    @OneToMany
+    @JsonbTransient
     private List<User> followers;
-
-    public User() {
-    }
     
     public User(String name, String password, Language language){
-        this.tweets = new ArrayList();
-        this.mentions = new ArrayList();
-        
-        this.following = new ArrayList();
-        this.followers = new ArrayList();
+        this.tweets = new ArrayList<>();
+        this.mentions = new ArrayList<>();
+        this.following = new ArrayList<>();
+        this.followers = new ArrayList<>();
         
         this.name = name;
         this.password = password;
         this.language = language;
     }
     
-    public User(String name, String location, String website, String password, String bio, Role role, Language language, ByteArray photo, List<Tweet> tweets, List<Tweet> mentions, List<User> following, List<User> followers) {
-        this.name = name;
-        this.location = location;
-        this.website = website;
-        this.password = password;
-        this.bio = bio;
-        this.role = role;
-        this.language = language;
-        this.photo = photo;
-        this.tweets = tweets;
-        this.mentions = mentions;
-        this.following = following;
-        this.followers = followers;
-    }
-    
+    /**
+     * Add a {@link Tweet} to this {@link User}
+     * 
+     * @param tweet The {@link Tweet} written by the {@link User}
+     */
     public void tweet(Tweet tweet) {
         this.tweets.add(tweet);
     }
     
-  /**
+    /**
+     * Add a {@link Mention} to the {@link Tweet}
+     * 
+     * @param tweet 
+     */
+    public void addMention (Tweet tweet) {
+        this.mentions.add(tweet);
+    }
+    
+    /**
     * Add a follower to the list of followers. Not allowing a user to follow themselves.
     * 
     * @param follower The follower to be added to the followers list
@@ -77,96 +120,32 @@ public class User {
         }
     }
     
+    /**
+     * Remove a specific follower from the list of followers.
+     * 
+     * @param follower The follower to be removed from the followers list.
+     */
     public void removeFollower(User follower){
         this.followers.remove(follower);
     }
     
-    /* - Getters and Setters - */
-    public String getName() {
-        return name;
+    /**
+     * Add a {@link User} to the list of people this {@link Uer} is following. Not allowing a user to unfollow themselves.
+     * 
+     * @param following  The follower to be added to the followers list
+     */
+    public void addFollowing(User following) {
+        if(!following.equals(this)) {
+            this.following.add(following);
+        }
     }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
-    public String getWebsite() {
-        return website;
-    }
-
-    public void setWebsite(String website) {
-        this.website = website;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getBio() {
-        return bio;
-    }
-
-    public void setBio(String bio) {
-        this.bio = bio;
-    }
-
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
-
-    public Language getLanguage() {
-        return language;
-    }
-
-    public void setLanguage(Language language) {
-        this.language = language;
-    }
-
-    public ByteArray getPhoto() {
-        return photo;
-    }
-
-    public void setPhoto(ByteArray photo) {
-        this.photo = photo;
-    }
-
-    public List<Tweet> getTweets() {
-        return tweets;
-    }
-
-    public List<Tweet> getMentions() {
-        return mentions;
-    }
-
-    public void setMentions(List<Tweet> mentions) {
-        this.mentions = mentions;
-    }
-
-    public List<User> getFollowing() {
-        return following;
-    }
-
-    public void setFollowing(List<User> following) {
-        this.following = following;
-    }
-
-    public List<User> getFollowers() {
-        return followers;
+    
+    /**
+     * Remove a specific {@link User} this {@link User} is following.
+     * 
+     * @param follower The follower to be removed from the followers list.
+     */
+    public void removeFollowing (User following){
+        this.following.remove(following);
     }
 }

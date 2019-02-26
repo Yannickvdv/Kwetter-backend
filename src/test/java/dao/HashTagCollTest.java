@@ -1,14 +1,14 @@
+package dao;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package domain;
 
-import domain.enums.Language;
+import dao.hashtag.HashTagDaoColl;
+import domain.HashTag;
 import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -20,14 +20,12 @@ import static org.junit.Assert.*;
  *
  * @author Yannick
  */
-public class TweetTest {
+public class HashTagCollTest {
+        
+    HashTagDaoColl hashTagDaoColl;
     
-    private User user0;
-    private Tweet tweet;
-    
-    public TweetTest() {
-        this.user0 = new User("Bert", "Password0", Language.English);
-        this.tweet = new Tweet("Tweet", this.user0);
+    public HashTagCollTest() {
+        this.hashTagDaoColl = new HashTagDaoColl();
     }
     
     @BeforeClass
@@ -46,10 +44,11 @@ public class TweetTest {
     public void tearDown() {
     }
 
-    //Haven't found anything useful to test here yet, since only the getters
-    //and setters are implemented
-    //TODO: Add useful test
     @Test
-    public void testTweet() {
+    public void hashTagsTest() {
+        HashTag hashTag = new HashTag("test", null);
+         
+        this.hashTagDaoColl.addHashTag(hashTag);
+        assertEquals(Arrays.asList(hashTag), this.hashTagDaoColl.getHashTags());
     }
 }

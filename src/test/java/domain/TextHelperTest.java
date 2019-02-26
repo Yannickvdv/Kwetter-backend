@@ -5,6 +5,7 @@
  */
 package domain;
 
+import domain.helpers.TextHelper;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.After;
@@ -46,11 +47,11 @@ public class TextHelperTest {
     @Test
     public void testSearchHashTag() {
         List expectedHashTags = Arrays.asList("Sweets");
-        List resultHashTags = this.textHelper.searchHashTag("Hello, I like #Sweets");
+        List resultHashTags = this.textHelper.searchHashTags("Hello, I like #Sweets");
         assertEquals(expectedHashTags, resultHashTags);
         
         List expectedMultipleHashTags = Arrays.asList("Homework", "NoFilter", "AllNatural");
-        List resultMultipleHashTags = this.textHelper.searchHashTag("Good day to do #Homework while #NoFilter and #AllNatural");
+        List resultMultipleHashTags = this.textHelper.searchHashTags("Good day to do #Homework while #NoFilter and #AllNatural");
         assertEquals(expectedMultipleHashTags, resultMultipleHashTags);
     }
     

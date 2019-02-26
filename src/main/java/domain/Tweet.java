@@ -5,59 +5,84 @@
  */
 package domain;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import lombok.Getter;
+import org.hibernate.annotations.GenericGenerator;
 
 /**
  *
  * @author Yannick
  */
-public class Tweet {
+@Entity
+@Table(name = "tweets")
+public class Tweet implements Serializable {
     
+    @Getter
+    @Id
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "org.hibernate.id.UUIDGenerator")
+    private String kweetId;
+    
+    @Getter
+    @Column(length = 140)
     private String text;
+    @Getter
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "userId")
+    private User user;
+    @Getter
+    @Temporal(TemporalType.DATE)
     private Date insertedAt;
+    
+    @OneToMany
     private List<User> likes;   
     
     public Tweet() {
+        this.likes = new ArrayList();
     }
     
-    public Tweet(String text, Date insertedAt){
+    public Tweet(String text, User user){
         this.text = text;
-        this.insertedAt = insertedAt;
+        this.insertedAt = new Date();
+        this.user = user;
+        this.likes = new ArrayList();
+        
+        this.user.tweet(this);
     }
       
-    public Tweet(String text, Date insertedAt, List<User> likes){
+    public Tweet(String text, User user, Date insertedAt, List<User> likes){
         this.text = text;
         this.insertedAt = insertedAt;
+        this.user = user;
         this.likes = likes;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
-
-    public Date getInsertedAt() {
-        return insertedAt;
-    }
-
-    public void setInsertedAt(Date insertedAt) {
-        this.insertedAt = insertedAt;
-    }
-
-    public List<User> getLikes() {
-        return likes;
-    }
-
-    public void setLikes(List<User> likes) {
-        this.likes = likes;
+        
+        this.user.tweet(this);
     }
     
-    public void addLike(User like)
+    public void like(User like)
     {
-        this.likes.add(like);
+        if (!this.likes.contains(user)) {
+            this.likes.add(like);
+        } else {
+            this.likes.remove(like);
+        }
+    }
+    
+    public int getLikesCount() {
+        return this.likes.size();
     }
 }
