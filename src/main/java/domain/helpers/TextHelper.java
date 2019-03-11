@@ -19,10 +19,22 @@ public class TextHelper {
     public TextHelper(){
     }
     
+    /**
+     * Search a specific text for hashtags (#)
+     * 
+     * @param text The text to be searched through
+     * @return Returns a list of hashtags as strings
+     */
     public static List<String> searchHashTags(String text){
        return TextHelper.parse(text, "#");
     }
     
+    /**
+     * Search a specific text for mentions (@)
+     * 
+     * @param text The text to be searched through
+     * @return Returns a list of mentions as strings
+     */
     public static List<String> searchMentions(String text){
        return TextHelper.parse(text, "@");
     }

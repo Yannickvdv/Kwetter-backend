@@ -35,7 +35,7 @@ public class Tweet implements Serializable {
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "org.hibernate.id.UUIDGenerator")
-    private String kweetId;
+    private String tweetId;
     
     @Getter
     @Column(length = 140)

@@ -7,36 +7,61 @@ package dao.tweet;
 
 import dao.JPA;
 import domain.Tweet;
+import domain.User;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
+import javax.enterprise.inject.Default;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 
 /**
  *
  * @author Yannick
  */
-@Stateless @JPA
+@Stateless @JPA @Default
 public class TweetDaoJPA implements TweetDao {
     
     @PersistenceContext(unitName = "tweetPU")
     private EntityManager em;
     
-    public TweetDaoJPA() {
-    }
-    
     @PostConstruct
     public void init() {
-        System.out.println("---UserDaoJPA works");
+        System.out.println("---TweetDaoJPA works");
     }
     
     @Override
     public List<Tweet> getTweets() {
-        Query query = em.createQuery("SELECT * FROM Tweet");
+        TypedQuery<Tweet> query = this.em.createNamedQuery("Tweet.getTweets", Tweet.class);
         return new ArrayList<>(query.getResultList());
+    }
+
+    @Override
+    public Tweet getTweet(String id) {
+        return this.em.find(Tweet.class, id);
+    }
+
+    @Override
+    public void addTweet(Tweet tweet) {
+        this.em.persist(tweet);
+    }
+
+    @Override
+    public void editTweet(Tweet tweet) {
+        this.em.merge(tweet);
+    }
+
+    @Override
+    public void remove(Tweet tweet) {
+        this.em.remove(this.em.merge(tweet));
+    }
+
+    @Override
+    public void like(Tweet tweet, User user) {
+        tweet.like(user);
+        this.editTweet(tweet);
     }
     
 }

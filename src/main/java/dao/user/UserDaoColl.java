@@ -5,20 +5,19 @@
  */
 package dao.user;
 ;
-import domain.Tweet;
 import domain.User;
 import domain.enums.Role;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
-import javax.enterprise.inject.Default;
+import javax.enterprise.inject.Alternative;
 
 /**
  *
  * @author Yannick
  */
-@Stateless @Default
+@Stateless @Alternative
 public class UserDaoColl implements UserDao {
     
     private List<User> users = new ArrayList<>();
@@ -44,8 +43,8 @@ public class UserDaoColl implements UserDao {
      * @param newUser The {@link User} with the new values
      */
     @Override
-    public void editUser(User oldUser, User newUser) {
-        this.users.set(this.users.indexOf(oldUser), newUser);
+    public void editUser(User newUser) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
     /**
@@ -107,14 +106,5 @@ public class UserDaoColl implements UserDao {
     public void unfollow(User unfollower, User user){
         this.getUser(user.getName()).removeFollower(unfollower);
         this.getUser(unfollower.getName()).removeFollowing(user);
-    }
-    
-    @Override
-    public List<Tweet> getAllTweets(){
-        List<Tweet> tweets = new ArrayList<>();
-        this.users.forEach((User u) ->{
-            tweets.addAll(u.getTweets());
-        });
-        return tweets;
     }
 }

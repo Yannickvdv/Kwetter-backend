@@ -25,13 +25,13 @@ public class StartUp {
     private UserService userService;
     
     @Inject
-    private TweetService tweetService;
+    private KwetterService kwetterService;
     
     public StartUp() {
     }
     
     @PostConstruct
-    private void intData() {
+    private void initData() {
         User user1 = new User("Bart", "Eindhoven", Language.English);
         User user2 = new User("Henk", "New York", Language.Dutch);
         
@@ -45,7 +45,7 @@ public class StartUp {
                     "Test #" + i,
                     i > 50 ? user1 : user2
             );
-            tweetService.tweet(tweet);
+            kwetterService.tweet(tweet);
         }  
     }
 }

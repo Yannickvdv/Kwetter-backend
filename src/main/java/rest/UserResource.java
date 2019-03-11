@@ -23,7 +23,7 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import service.TweetService;
+import service.KwetterService;
 import service.UserService;
 
 /**
@@ -31,6 +31,7 @@ import service.UserService;
  * @author Yannick
  */
 @Path("users")
+@Produces({MediaType.APPLICATION_JSON})
 @Api
 @Stateless
 public class UserResource {
@@ -39,10 +40,9 @@ public class UserResource {
     private UserService userService;
     
     @Inject
-    private TweetService tweetService;
+    private KwetterService tweetService;
     
     @GET
-    @Produces({MediaType.APPLICATION_JSON})
     public Response getUsers() {
         System.out.println(userService.getUsers());
         GenericEntity entity = new GenericEntity<List<User>> (userService.getUsers()) {};
@@ -51,7 +51,6 @@ public class UserResource {
     
     @GET
     @Path("{name}")
-    @Produces(MediaType.APPLICATION_JSON)
     public Response getUser(@PathParam("name") String name) {
         User user = userService.getUser(name);
         if (user == null) {
@@ -62,21 +61,18 @@ public class UserResource {
     
     @PUT
     @Path("{name}")
-    @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response editUser(User user) {
         if(user == null) {
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
-        User oldUser = new User(user.getName(), null, null);
-        userService.editUser(oldUser, user);
+        userService.editUser(user);
         URI id = URI.create(user.getName());
         return Response.created(id).build();
     }
     
     @POST
     @Path("{name}")
-    @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response addUser(User user) {
         if(user == null) {

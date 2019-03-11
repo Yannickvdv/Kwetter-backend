@@ -9,14 +9,15 @@ import dao.JPA;
 import domain.HashTag;
 import java.util.ArrayList;
 import java.util.List;
-import javax.ejb.Stateless;
 import javax.annotation.PostConstruct;
+import javax.ejb.Stateless;
+import javax.enterprise.inject.Default;
 import javax.persistence.*;
 /**
  *
  * @author Yannick
  */
-@Stateless @JPA
+@Stateless @JPA @Default
 public class HashTagDaoJPA implements HashTagDao{
     
     @PersistenceContext(unitName = "hashTagPU")

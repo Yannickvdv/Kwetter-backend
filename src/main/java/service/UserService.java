@@ -6,7 +6,6 @@
 package service;
 
 import dao.user.UserDao;
-import domain.Tweet;
 import domain.User;
 import domain.enums.Role;
 import java.util.List;
@@ -25,10 +24,6 @@ public class UserService {
     
     public void addUser(User user) {
         this.userDao.addUser(user);
-    }
-
-    public List<Tweet> getAllTweets() {
-        return this.userDao.getAllTweets();
     }
 
     public User getUser(String username) {
@@ -51,7 +46,7 @@ public class UserService {
         this.userDao.unfollow(unfollower, user);
     }
 
-    public void editUser(User oldUser, User newUser) {
-        this.userDao.editUser(oldUser, newUser);
+    public void editUser(User newUser) {
+        this.userDao.editUser(newUser);
     }
 }

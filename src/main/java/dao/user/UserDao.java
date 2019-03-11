@@ -5,7 +5,6 @@
  */
 package dao.user;
 
-import domain.Tweet;
 import domain.User;
 import domain.enums.Role;
 import java.util.List;
@@ -26,17 +25,9 @@ public interface UserDao {
     /**
      * Edit a {@link User} to a new user object
      * 
-     * @param oldUser {@link User} to be edited
      * @param newUser {@link User} object containing the new values
      */
-    void editUser(User oldUser, User newUser);
-    
-    /**
-     * Get all the existing tweets
-     * 
-     * @return The existing tweets
-     */
-    List<Tweet> getAllTweets();
+    void editUser(User newUser);
 
     /**
      * Get a user by username

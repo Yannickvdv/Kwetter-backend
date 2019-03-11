@@ -18,6 +18,8 @@ import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.Getter;
@@ -30,6 +32,9 @@ import org.hibernate.annotations.GenericGenerator;
  */
 @Entity
 @Table(name = "users")
+@NamedQueries({
+    @NamedQuery(name = "user.findByname", query = "SELECT u FROM User u WHERE u.name = :name"),
+    @NamedQuery(name = "user.getUsers", query = "SELECt u FROM User u")})
 public class User implements Serializable {
     
     @Getter
@@ -74,7 +79,7 @@ public class User implements Serializable {
     @Getter 
     @OneToMany
     @JsonbTransient
-    private List<User> following;
+    private List<User> following; 
     @Getter 
     @OneToMany
     @JsonbTransient

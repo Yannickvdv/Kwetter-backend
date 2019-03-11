@@ -6,20 +6,21 @@
 package dao.user;
 
 import dao.JPA;
-import domain.Tweet;
 import domain.User;
 import domain.enums.Role;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
+import javax.enterprise.inject.Default;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 
 /**
  *
  * @author Yannick
  */
-@Stateless @JPA
+@Stateless @JPA @Default
 public class UserDaoJPA implements UserDao {
 
     @PersistenceContext(unitName = "userPU")
@@ -40,39 +41,45 @@ public class UserDaoJPA implements UserDao {
 
     @Override
     public void follow(User follower, User user) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        user.addFollower(follower);
+        this.editUser(user);
+        
+        follower.addFollowing(user);
+        this.editUser(follower);
     }
     
-      @Override
-    public void editUser(User oldUser, User newUser) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    
+    @Override
+    public void unfollow(User unfollower, User user) {
+        user.removeFollower(unfollower);
+        this.editUser(user);
+        
+        unfollower.removeFollowing(user);
+        this.editUser(unfollower);
+    }
+    
+    @Override
+    public void setUserRole(User user, Role role) {
+        user.setRole(role);
+        this.editUser(user);        
+    }
+    
+    @Override
+    public void editUser(User newUser) {
+        this.em.merge(newUser);
     }
 
     @Override
-    public List<Tweet> getAllTweets() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public User getUser(String username) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public User getUser(String name) {
+        TypedQuery<User> query = em.createNamedQuery("user.findByName", User.class);
+        query.setParameter("name", name);
+        List<User> result = query.getResultList();
+        return result.get(0);
     }
 
     @Override
     public List<User> getUsers() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void setUserRole(User user, Role role) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void unfollow(User unfollower, User user) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-  
-    
+        TypedQuery<User> query = this.em.createNamedQuery("User.getUsers", User.class);
+        return query.getResultList();
+    }    
 }
