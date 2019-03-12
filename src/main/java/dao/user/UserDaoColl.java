@@ -4,7 +4,6 @@
  * and open the template in the editor.
  */
 package dao.user;
-;
 import domain.User;
 import domain.enums.Role;
 import java.util.ArrayList;

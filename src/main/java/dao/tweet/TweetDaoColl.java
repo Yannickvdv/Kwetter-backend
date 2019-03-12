@@ -38,7 +38,7 @@ public class TweetDaoColl implements TweetDao {
     @Override
     public Tweet getTweet(String id) {
         for(Tweet tweet : this.tweets) {
-            if(tweet.getTweetId().equals(id)) {
+            if(tweet.getUuid().equals(id)) {
                 return tweet;
             }
         }
@@ -58,7 +58,7 @@ public class TweetDaoColl implements TweetDao {
 
     @Override
     public void like(Tweet tweet, User user) {
-        Tweet foundTweet = this.getTweet(tweet.getTweetId());
+        Tweet foundTweet = this.getTweet(tweet.getUuid());
         foundTweet.like(user);
     }
     

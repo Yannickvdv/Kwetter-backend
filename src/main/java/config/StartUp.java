@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package service;
+package config;
 
 import domain.Tweet;
 import domain.User;
@@ -12,6 +12,8 @@ import javax.annotation.PostConstruct;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.inject.Inject;
+import service.KwetterService;
+import service.UserService;
 
 /**
  *

@@ -5,7 +5,6 @@
  */
 package dao.tweet;
 
-import dao.JPA;
 import domain.Tweet;
 import domain.User;
 import java.util.ArrayList;
@@ -21,10 +20,10 @@ import javax.persistence.TypedQuery;
  *
  * @author Yannick
  */
-@Stateless @JPA @Default
+@Stateless @Default
 public class TweetDaoJPA implements TweetDao {
     
-    @PersistenceContext(unitName = "tweetPU")
+    @PersistenceContext
     private EntityManager em;
     
     @PostConstruct

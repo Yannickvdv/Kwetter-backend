@@ -5,7 +5,6 @@
  */
 package dao.hashtag;
 
-import dao.JPA;
 import domain.HashTag;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,14 +16,11 @@ import javax.persistence.*;
  *
  * @author Yannick
  */
-@Stateless @JPA @Default
+@Stateless @Default
 public class HashTagDaoJPA implements HashTagDao{
     
-    @PersistenceContext(unitName = "hashTagPU")
+    @PersistenceContext
     private EntityManager em;
-    
-    public HashTagDaoJPA() {
-    }
     
     @PostConstruct
     public void init() {

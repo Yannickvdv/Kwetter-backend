@@ -5,7 +5,6 @@
  */
 package dao.user;
 
-import dao.JPA;
 import domain.User;
 import domain.enums.Role;
 import java.util.List;
@@ -20,14 +19,11 @@ import javax.persistence.TypedQuery;
  *
  * @author Yannick
  */
-@Stateless @JPA @Default
+@Stateless @Default
 public class UserDaoJPA implements UserDao {
 
-    @PersistenceContext(unitName = "userPU")
+    @PersistenceContext
     private EntityManager em;
-    
-    public UserDaoJPA() {
-    }
     
     @PostConstruct
     public void init() {

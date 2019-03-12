@@ -11,13 +11,15 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.json.bind.annotation.JsonbTransient;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -25,6 +27,7 @@ import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.validator.constraints.URL;
 
 /**
  *
@@ -41,7 +44,7 @@ public class User implements Serializable {
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "org.hibernate.id.UUIDGenerator")
-    String userId;
+    String uuid;
     
 
     @Getter @Setter 
@@ -66,30 +69,49 @@ public class User implements Serializable {
     @Enumerated(EnumType.STRING)
     private Language language;
     @Getter @Setter 
-    private byte[] photo;
+    @URL
+    private String photo;
     
-    @Getter 
+    @Getter
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     @JsonbTransient
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<Tweet> tweets;
-    @Getter 
-    @OneToMany
+    
+    @Getter
+    @OneToMany(cascade = CascadeType.REMOVE)
+    @JoinTable(name = "user_is_mentioned",
+            joinColumns = @JoinColumn(name = "user_uuid", referencedColumnName = "uuid"),
+            inverseJoinColumns = @JoinColumn(name = "tweet_uuid", referencedColumnName = "uuid"))
+    @JsonbTransient
     private List<Tweet> mentions;
     
-    @Getter 
-    @OneToMany
+    @Getter
+    @OneToMany(cascade = CascadeType.REMOVE)
+    @JoinTable(name = "user_is_following",
+            joinColumns = @JoinColumn(name = "user_uuid", referencedColumnName = "uuid"),
+            inverseJoinColumns = @JoinColumn(name = "following_uuid", referencedColumnName = "uuid"))
     @JsonbTransient
     private List<User> following; 
-    @Getter 
-    @OneToMany
+    
+    @Getter
+    @OneToMany(cascade = CascadeType.REMOVE)
+    @JoinTable(name = "user_has_followers",
+            joinColumns = @JoinColumn(name = "user_uuid", referencedColumnName = "uuid"),
+            inverseJoinColumns = @JoinColumn(name = "follower_uuid", referencedColumnName = "uuid"))
     @JsonbTransient
     private List<User> followers;
+    
+     public User() {
+        this("", "", Language.Dutch);
+    }
     
     public User(String name, String password, Language language){
         this.tweets = new ArrayList<>();
         this.mentions = new ArrayList<>();
         this.following = new ArrayList<>();
         this.followers = new ArrayList<>();
+        
+        this.role = Role.User;
         
         this.name = name;
         this.password = password;

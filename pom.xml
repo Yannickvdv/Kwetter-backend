@@ -47,6 +47,16 @@
 	</dependency>
         <!-- JavaX -->
         <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-entitymanager</artifactId>
+            <version>4.3.1.Final</version>
+        </dependency>
+            <dependency>
+            <groupId>org.hibernate.validator</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>6.0.15.Final</version>
+        </dependency>
+        <dependency>
             <groupId>javax</groupId>
             <artifactId>javaee-web-api</artifactId>
             <version>8.0</version>
@@ -135,7 +145,7 @@
                         </goals>
                         <configuration>
                             <dir>target/classes</dir>
-                            <params>--port=8080</params>
+                            <params>--port=9006 --verbose</params>
                         </configuration>
                     </execution>
                 </executions>
@@ -192,4 +202,11 @@
             </dependencies>
         </profile>
     </profiles>
+    <repositories>
+        <repository>
+            <id>unknown-jars-temp-repo</id>
+            <name>A temporary repository created by NetBeans for libraries and jars it could not identify. Please replace the dependencies in this repository with correct ones and delete this repository.</name>
+            <url>file:${project.basedir}/lib</url>
+        </repository>
+    </repositories>
 </project>
