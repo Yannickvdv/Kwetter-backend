@@ -50,9 +50,9 @@ public class UserResource {
     }
     
     @GET
-    @Path("{name}")
-    public Response getUser(@PathParam("name") String name) {
-        User user = userService.getUser(name);
+    @Path("{id}")
+    public Response getUser(@PathParam("id") String uuid) {
+        User user = userService.getUser(uuid);
         if (user == null) {
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
@@ -60,48 +60,48 @@ public class UserResource {
     }
     
     @PUT
-    @Path("{name}")
+    @Path("{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response editUser(User user) {
         if(user == null) {
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
         userService.editUser(user);
-        URI id = URI.create(user.getName());
+        URI id = URI.create(user.getUuid());
         return Response.created(id).build();
     }
     
     @POST
-    @Path("{name}")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response addUser(User user) {
         if(user == null) {
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
-        userService.addUser(user);
-        URI id = URI.create(user.getName());
+   
+        userService.addUser(user);            
+        URI id = URI.create(user.getUuid());
         return Response.created(id).build();
     }
     
     @GET
-    @Path("{name}/tweets")
+    @Path("{uuid}/tweets")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getUserTweets(@PathParam("name") String name) {
+    public Response getUserTweets(@PathParam("uuid") String uuid) {
         //TODO: Might have to use tweetservice?
-        User user = userService.getUser(name);
+        User user = userService.getUser(uuid);
         GenericEntity tweets = new GenericEntity<List<Tweet>>(user.getTweets()) {};
         return Response.ok(tweets).build();
     }
     
     @POST
-    @Path("{name}/tweets")
+    @Path("{uuid}/tweets")
     @Produces(MediaType.APPLICATION_JSON)
     public Response sendTweet(Tweet tweet) {
         if(tweet == null) {
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
         tweetService.tweet(tweet);
-        URI id = URI.create(tweet.getUser().getName());
+        URI id = URI.create(tweet.getUser().getUuid());
         return Response.created(id).build();
     }
 }

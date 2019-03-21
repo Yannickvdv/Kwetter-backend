@@ -26,8 +26,12 @@ public class UserService {
         this.userDao.addUser(user);
     }
 
-    public User getUser(String username) {
-        return this.userDao.getUser(username);
+    public User getUser(String uuid) {
+        return this.userDao.getUser(uuid);
+    }
+    
+    public User findByName(String name) {
+        return this.userDao.getUser(name);
     }
 
     public List<User> getUsers() {

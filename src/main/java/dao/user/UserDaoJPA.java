@@ -27,12 +27,12 @@ public class UserDaoJPA implements UserDao {
     
     @PostConstruct
     public void init() {
-        System.out.println("---UserDaoJPA works");
+        System.out.println("---UserDaoJPA Initialized");
     }
     
     @Override
     public void addUser(User user) {
-        em.persist(user);
+        this.em.persist(user);
     }
 
     @Override
@@ -66,16 +66,26 @@ public class UserDaoJPA implements UserDao {
     }
 
     @Override
-    public User getUser(String name) {
-        TypedQuery<User> query = em.createNamedQuery("user.findByName", User.class);
+    public User getUser(String uuid) {
+        TypedQuery<User> query = this.em.createNamedQuery("user.findByUuid", User.class);
+        query.setParameter("uuid", uuid);
+        
+        List<User> result = query.getResultList();
+        return result.get(0);
+    }
+    
+    @Override
+    public User findByName(String name) {
+        TypedQuery<User> query = this.em.createNamedQuery("user.findByName", User.class);
         query.setParameter("name", name);
+        
         List<User> result = query.getResultList();
         return result.get(0);
     }
 
     @Override
     public List<User> getUsers() {
-        TypedQuery<User> query = this.em.createNamedQuery("User.getUsers", User.class);
+        TypedQuery<User> query = this.em.createNamedQuery("user.getUsers", User.class);
         return query.getResultList();
     }    
 }

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package dao;
+package dao.collection;
 
 import dao.user.UserDaoColl;
 import domain.User;
@@ -12,11 +12,10 @@ import java.util.Arrays;
 import java.util.List;
 import org.junit.After;
 import org.junit.AfterClass;
-import org.junit.Assert;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  *
@@ -65,28 +64,5 @@ public class UserDaoCollTest {
     public void testGetUsers() {
         List<User> users = Arrays.asList(this.user0, this.user1, this.user2, this.user3);
         assertEquals(this.userDaoColl.getUsers(), users);
-    }
-
-    @Test
-    public void testFollow() {
-        this.userDaoColl.follow(this.user0, this.user1);
-        this.userDaoColl.follow(this.user0, this.user2);
-        
-        assertEquals(Arrays.asList(this.user1, this.user2), this.userDaoColl.getUser(this.user0.getName()).getFollowing());
-        assertEquals(Arrays.asList(this.user0), this.userDaoColl.getUser(this.user1.getName()).getFollowers());
-        assertEquals(Arrays.asList(this.user0), this.userDaoColl.getUser(this.user2.getName()).getFollowers()); 
-    }
-    
-    @Test
-    public void testUnfollow() {
-        //Follow
-        this.userDaoColl.follow(this.user2, this.user3);
-        assertEquals(Arrays.asList(this.user3), this.userDaoColl.getUser(this.user2.getName()).getFollowing());
-        assertEquals(Arrays.asList(this.user2), this.userDaoColl.getUser(this.user3.getName()).getFollowers());
-        
-        //Unfollow
-        this.userDaoColl.unfollow(this.user2, this.user3);
-        assertEquals(Arrays.asList(), this.userDaoColl.getUser(this.user2.getName()).getFollowing());
-        assertEquals(Arrays.asList(), this.userDaoColl.getUser(this.user3.getName()).getFollowers());
     }
 }

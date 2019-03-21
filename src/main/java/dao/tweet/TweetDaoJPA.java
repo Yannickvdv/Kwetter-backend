@@ -28,12 +28,12 @@ public class TweetDaoJPA implements TweetDao {
     
     @PostConstruct
     public void init() {
-        System.out.println("---TweetDaoJPA works");
+        System.out.println("---TweetDaoJPA Initialized");
     }
     
     @Override
     public List<Tweet> getTweets() {
-        TypedQuery<Tweet> query = this.em.createNamedQuery("Tweet.getTweets", Tweet.class);
+        TypedQuery<Tweet> query = this.em.createNamedQuery("tweet.getTweets", Tweet.class);
         return new ArrayList<>(query.getResultList());
     }
 

@@ -27,7 +27,6 @@ import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.validator.constraints.URL;
 
 /**
  *
@@ -36,8 +35,9 @@ import org.hibernate.validator.constraints.URL;
 @Entity
 @Table(name = "users")
 @NamedQueries({
-    @NamedQuery(name = "user.findByname", query = "SELECT u FROM User u WHERE u.name = :name"),
-    @NamedQuery(name = "user.getUsers", query = "SELECt u FROM User u")})
+    @NamedQuery(name = "user.findByUuid", query = "SELECT u FROM User u WHERE u.uuid = :uuid"),
+    @NamedQuery(name = "user.findByName", query = "SELECT u FROM User u WHERE u.name = :name"),
+    @NamedQuery(name = "user.getUsers", query = "SELECT u FROM User u")})
 public class User implements Serializable {
     
     @Getter
@@ -69,7 +69,6 @@ public class User implements Serializable {
     @Enumerated(EnumType.STRING)
     private Language language;
     @Getter @Setter 
-    @URL
     private String photo;
     
     @Getter

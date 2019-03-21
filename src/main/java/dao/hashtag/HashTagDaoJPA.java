@@ -24,18 +24,18 @@ public class HashTagDaoJPA implements HashTagDao{
     
     @PostConstruct
     public void init() {
-        System.out.println("---HashTagDaoJPA works");
+        System.out.println("---HashTagDaoJPA Initialized");
     }
     
     @Override
     public List<HashTag> getHashTags() {
-       Query query = em.createQuery("SELECT * FROM HashTag");
+       Query query = em.createNamedQuery("hashTag.getHashTags", HashTag.class);
        return new ArrayList<>(query.getResultList());
     }
 
     @Override
     public HashTag findByName(String name) {
-        TypedQuery<HashTag> query = em.createNamedQuery("hashtag.findByName", HashTag.class);
+        TypedQuery<HashTag> query = em.createNamedQuery("hashTag.findByName", HashTag.class);
         query.setParameter("name", name);
         List<HashTag> result = query.getResultList();
         return result.get(0);
