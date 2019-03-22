@@ -18,6 +18,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import lombok.Getter;
 import org.hibernate.annotations.GenericGenerator;
@@ -28,6 +30,9 @@ import org.hibernate.annotations.GenericGenerator;
  */
 @Entity
 @Table(name = "hashtags")
+@NamedQueries({
+    @NamedQuery(name = "hashTag.getHashTags", query = "SELECT h FROM HashTag h"),
+    @NamedQuery(name = "hashTag.findByName", query = "SELECT h FROM HashTag h WHERE h.text = :text")})
 public class HashTag implements Serializable {
     
     @Getter

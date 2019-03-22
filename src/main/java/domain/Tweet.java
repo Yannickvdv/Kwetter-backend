@@ -20,6 +20,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -33,6 +35,8 @@ import org.hibernate.annotations.GenericGenerator;
  */
 @Entity
 @Table(name = "tweets")
+@NamedQueries({
+    @NamedQuery(name = "tweet.getTweets", query = "SELECT t FROM Tweet t")})
 public class Tweet implements Serializable {
     
     @Getter
@@ -46,7 +50,7 @@ public class Tweet implements Serializable {
     private String text;
     
     @Getter
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_uuid")
     private User user;
     
@@ -54,7 +58,8 @@ public class Tweet implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date insertedAt;
     
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, fetch=FetchType.EAGER)
+    @JsonbTransient
     @JoinTable(name = "tweet_has_likes",
             joinColumns = @JoinColumn(name = "tweet_uuid", referencedColumnName = "uuid"),
             inverseJoinColumns = @JoinColumn(name = "user_uuid", referencedColumnName = "uuid"))
@@ -100,7 +105,7 @@ public class Tweet implements Serializable {
         }
     }
     
-    public int getLikesCount() {
-        return this.likes.size();
-    }
+//    public int getLikesCount() {
+//        return this.likes.size();
+//    }
 }

@@ -57,15 +57,31 @@ public class UserDaoColl implements UserDao {
     }
     
     /**
-     * Get a user by username
+     * Get a user by uuid
      * 
-     * @param username User name to identify the {@Link User} by
+     * @param uuid User uuid to identify the {@Link User} by
      * @return Return the identified {@link User}
      */
     @Override
-    public User getUser(String username) {
+    public User getUser(String uuid) {
         for(User user : this.users) {
-            if(user.getName().equalsIgnoreCase(username)) {
+            if(user.getUuid().equalsIgnoreCase(uuid)) {
+                return user;
+            }
+        }
+        return null;
+    }
+    
+    /**
+     * Get a user by username
+     * 
+     * @param name Username to identify the {@Link User} by
+     * @return Return the identified {@link User}
+     */
+    @Override
+    public User findByName(String name) {
+        for(User user : this.users) {
+            if(user.getName().equalsIgnoreCase(name)) {
                 return user;
             }
         }
@@ -80,7 +96,7 @@ public class UserDaoColl implements UserDao {
      */
     @Override
     public void setUserRole(User user, Role role) {
-        this.getUser(user.getName()).setRole(role);
+        this.getUser(user.getUuid()).setRole(role);
     }
     
     /**
@@ -91,8 +107,8 @@ public class UserDaoColl implements UserDao {
      */
     @Override
     public void follow(User follower, User user){
-        this.getUser(user.getName()).addFollower(follower);
-        this.getUser(follower.getName()).addFollowing(user);
+        this.getUser(user.getUuid()).addFollower(follower);
+        this.getUser(follower.getUuid()).addFollowing(user);
     }
     
     /**
@@ -103,7 +119,7 @@ public class UserDaoColl implements UserDao {
      */
     @Override
     public void unfollow(User unfollower, User user){
-        this.getUser(user.getName()).removeFollower(unfollower);
-        this.getUser(unfollower.getName()).removeFollowing(user);
+        this.getUser(user.getUuid()).removeFollower(unfollower);
+        this.getUser(unfollower.getUuid()).removeFollowing(user);
     }
 }

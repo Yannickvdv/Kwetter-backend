@@ -31,12 +31,20 @@ public interface UserDao {
     void editUser(User newUser);
 
     /**
-     * Get a user by username
+     * Get a user by uuid
      *
-     * @param username User name to identify the {@Link User} by
+     * @param uuid User uuid to identify the {@Link User} by
      * @return Return the identified {@link User}
      */
-    User getUser(String username);
+    User getUser(String uuid);
+    
+    /**
+     * Get a user by username
+     *
+     * @param name Username to identify the {@Link User} by
+     * @return Return the identified {@link User}
+     */
+    User findByName(String name);
 
     /**
      * Get all the existing users

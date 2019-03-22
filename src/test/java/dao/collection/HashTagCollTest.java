@@ -1,4 +1,4 @@
-package dao;
+package dao.collection;
 
 /*
  * To change this license header, choose License Headers in Project Properties.

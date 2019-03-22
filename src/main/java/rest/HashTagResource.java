@@ -22,7 +22,7 @@ import service.HashTagService;
  *
  * @author Yannick
  */
-@Path("hashtag")
+@Path("hashtags")
 @Api
 @Stateless
 public class HashTagResource {
