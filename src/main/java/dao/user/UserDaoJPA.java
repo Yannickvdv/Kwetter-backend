@@ -5,15 +5,18 @@
  */
 package dao.user;
 
+import common.exceptions.UniqueConstraintViolationException;
 import domain.User;
 import domain.enums.Role;
 import java.util.List;
 import javax.annotation.PostConstruct;
+import javax.ejb.EJBTransactionRolledbackException;
 import javax.ejb.Stateless;
 import javax.enterprise.inject.Default;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import javax.validation.ConstraintViolationException;
 
 /**
  *
@@ -31,8 +34,18 @@ public class UserDaoJPA implements UserDao {
     }
     
     @Override
-    public void addUser(User user) {
-        em.persist(user);
+    public void addUser(User user) throws UniqueConstraintViolationException {
+        try {
+            this.em.persist(user);
+        } catch (EJBTransactionRolledbackException ex) {
+            Throwable t = ex.getCause();
+            while ((t != null) && !(t instanceof ConstraintViolationException)) {
+                t = t.getCause();
+            }
+            if (t instanceof ConstraintViolationException) {
+                throw new UniqueConstraintViolationException("User name must be unique", ex);
+            }    
+        }
     }
 
     @Override
