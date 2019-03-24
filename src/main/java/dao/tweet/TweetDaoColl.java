@@ -9,14 +9,14 @@ import domain.Tweet;
 import domain.User;
 import java.util.ArrayList;
 import java.util.List;
-import javax.ejb.Stateless;
+import javax.ejb.Singleton;
 import javax.enterprise.inject.Alternative;
 
 /**
  *
  * @author Yannick
  */
-@Stateless @Alternative
+@Singleton @Alternative
 public class TweetDaoColl implements TweetDao {
     
     private List<Tweet> tweets = new ArrayList<>();

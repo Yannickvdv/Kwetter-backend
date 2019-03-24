@@ -101,4 +101,13 @@ public class UserDaoJPA implements UserDao {
         TypedQuery<User> query = this.em.createNamedQuery("user.getUsers", User.class);
         return query.getResultList();
     }    
+    
+    /**
+     * Set the entity manager of UserDaoJPA
+     * 
+     * @param em The entity manager to be set
+     */
+    public void setEm(EntityManager em) {
+        this.em = em;
+    }
 }

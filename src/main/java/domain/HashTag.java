@@ -46,7 +46,7 @@ public class HashTag implements Serializable {
     private String text;
     
     @Getter  
-    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL, CascadeType.MERGE})
     @JoinTable(name = "hashtag_has_tweets",
             joinColumns = @JoinColumn(name = "hashtag_uuid", referencedColumnName = "uuid"),
             inverseJoinColumns = @JoinColumn(name = "tweet_uuid", referencedColumnName = "uuid"))

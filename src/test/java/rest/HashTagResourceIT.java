@@ -25,7 +25,7 @@ import org.junit.Test;
  *
  * @author Yannick
  */
-public class HashTagResourceTest {
+public class HashTagResourceIT {
     
     @Before
     public void setUp() {

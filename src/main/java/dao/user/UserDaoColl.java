@@ -9,14 +9,14 @@ import domain.enums.Role;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
-import javax.ejb.Stateless;
+import javax.ejb.Singleton;
 import javax.enterprise.inject.Alternative;
 
 /**
  *
  * @author Yannick
  */
-@Stateless @Alternative
+@Singleton @Alternative
 public class UserDaoColl implements UserDao {
     
     private List<User> users = new ArrayList<>();

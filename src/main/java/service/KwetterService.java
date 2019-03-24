@@ -37,6 +37,9 @@ public class KwetterService {
      * @param tweet The {@link Tweet} to be added
      */
     public void tweet(Tweet tweet) {
+        //Tweet
+        this.tweetDAO.addTweet(tweet);
+        
         //Add Tweets to the existing HashTags
         List<String> usedHashTags = TextHelper.searchHashTags(tweet.getText());
         List<HashTag> availableHashTags = this.hashTagDAO.getHashTags();
@@ -62,8 +65,5 @@ public class KwetterService {
         TextHelper.searchMentionedUsers(tweet.getText(), this.userDAO.getUsers()).forEach((User u) -> {
             u.addMention(tweet);
         });
-        
-        //Tweet
-        this.tweetDAO.addTweet(tweet);
     }
 }

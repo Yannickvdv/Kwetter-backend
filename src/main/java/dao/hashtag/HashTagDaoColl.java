@@ -8,14 +8,14 @@ package dao.hashtag;
 import domain.HashTag;
 import java.util.ArrayList;
 import java.util.List;
-import javax.ejb.Stateless;
+import javax.ejb.Singleton;
 import javax.enterprise.inject.Alternative;
 
 /**
  *
  * @author Yannick
  */
-@Stateless @Alternative
+@Singleton @Alternative
 public class HashTagDaoColl implements HashTagDao{
     
     private List<HashTag> HashTags = new ArrayList<>();

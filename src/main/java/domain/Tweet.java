@@ -68,7 +68,7 @@ public class Tweet implements Serializable {
     @Getter
     @ManyToMany(mappedBy = "tweets")
     @JsonbTransient
-    private final List<HashTag> hashTags;
+    private List<HashTag> hashTags;
     
     public Tweet() {
         this.insertedAt = new Date();

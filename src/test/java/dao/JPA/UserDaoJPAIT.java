@@ -1,3 +1,5 @@
+package dao.JPA;
+
 /*
  * Copyright (C) 2019 Yannick
  *
@@ -15,61 +17,93 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import common.DatabaseCleaner;
 import dao.user.UserDaoJPA;
 import domain.User;
 import domain.enums.Language;
+import java.sql.SQLException;
 import java.util.Arrays;
-import org.junit.After;
-import org.junit.AfterClass;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
+import javax.persistence.Persistence;
+import javax.persistence.RollbackException;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
  *
  * @author Yannick
  */
-public class UserDaoJPATest {
-    
-    UserDaoJPA userDaoJPA;
+public class UserDaoJPAIT {
+    EntityManagerFactory emf = Persistence.createEntityManagerFactory("KwetterPersistenceTestUnit");
+    private EntityManager em;
+    private EntityTransaction tx;
+    private UserDaoJPA userDaoJPA;
     
     User user0;
     User user1;
     User user2;
     User user3;
     
-    public UserDaoJPATest() {
+    @Before
+    public void setUp() {
+        try {
+            new DatabaseCleaner(emf.createEntityManager()).clean();
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDaoJPAIT.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        em = emf.createEntityManager();
+        tx = em.getTransaction();
+        
         this.userDaoJPA = new UserDaoJPA();
+        this.userDaoJPA.setEm(em);
         
         this.user0 = new User("Bert", "Password0", Language.English);
         this.user1 = new User("Henk", "Password1", Language.Dutch);
         this.user2 = new User("Marc", "Password2", Language.English);
         this.user3 = new User("Dennis", "Password3", Language.English);
         
+        tx.begin();
         this.userDaoJPA.addUser(this.user0);
         this.userDaoJPA.addUser(this.user1);
         this.userDaoJPA.addUser(this.user2);
         this.userDaoJPA.addUser(this.user3);
-    }
-    
-    @BeforeClass
-    public static void setUpClass() {
-    }
-    
-    @AfterClass
-    public static void tearDownClass() {
-    }
-    
-    @Before
-    public void setUp() {
-    }
-    
-    @After
-    public void tearDown() {
+        tx.commit();
     }
 
-       @Test
+    @Test 
+    public void addUser() {
+        User newUser = new User("Bart", "Password3", Language.English);
+        
+        tx.begin();
+        userDaoJPA.addUser(newUser);
+        tx.commit();
+        tx.begin();
+        List<User> users = userDaoJPA.getUsers();
+        tx.commit();
+        
+        assert(users.contains(this.user0));
+    }
+    
+    @Test(expected = RollbackException.class)
+    public void AddUserSameName() {
+        User newUser0 = new User("Dennis", "Password3", Language.English);
+        User newUser1 = new User("Dennis", "Password3", Language.English);
+        
+        tx.begin();
+        userDaoJPA.addUser(newUser0);
+        tx.commit();
+        tx.begin();
+        userDaoJPA.addUser(newUser1);
+        tx.commit();
+    }
+    
+    @Test
     public void testFollow() {
         this.userDaoJPA.follow(this.user0, this.user1);
         this.userDaoJPA.follow(this.user0, this.user2);

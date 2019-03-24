@@ -31,7 +31,7 @@ import org.junit.Test;
  *
  * @author Yannick
  */
-public class UserResourceTest {
+public class UserResourceIT {
     
     @Before
     public void setUp() {
@@ -60,7 +60,7 @@ public class UserResourceTest {
         .when()
             .post("/users")
         .then()
-            .statusCode(200);
+            .statusCode(201);
     }
     
     @Test
@@ -78,27 +78,27 @@ public class UserResourceTest {
     }
     
     //Still fails, see exception branch
-//    @Test
-//    public void duplicateUserName() {
-//        User user1 = new User("Harry", "test1", Language.Dutch);
-//        User user2 = new User("Harry", "test2", Language.English);
-//        
-//        given()
-//            .contentType("application/json")
-//            .body(user1)
-//        .when()
-//            .post("/users")
-//        .then()
-//            .statusCode(200);
-//        
-//        given()
-//            .contentType("application/json")
-//            .body(user2)
-//        .when()
-//            .post("/users")
-//        .then()
-//            .statusCode(400);
-//    }
+    @Test
+    public void duplicateUserName() {
+        User user1 = new User("Harry", "test1", Language.Dutch);
+        User user2 = new User("Harry", "test2", Language.English);
+        
+        given()
+            .contentType("application/json")
+            .body(user1)
+        .when()
+            .post("/users")
+        .then()
+            .statusCode(200);
+        
+        given()
+            .contentType("application/json")
+            .body(user2)
+        .when()
+            .post("/users")
+        .then()
+            .statusCode(400);
+    }
     
     
 }

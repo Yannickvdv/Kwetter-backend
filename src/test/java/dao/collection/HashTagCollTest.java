@@ -9,12 +9,9 @@ package dao.collection;
 import dao.hashtag.HashTagDaoColl;
 import domain.HashTag;
 import java.util.Arrays;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  *
@@ -24,24 +21,9 @@ public class HashTagCollTest {
         
     HashTagDaoColl hashTagDaoColl;
     
-    public HashTagCollTest() {
-        this.hashTagDaoColl = new HashTagDaoColl();
-    }
-    
-    @BeforeClass
-    public static void setUpClass() {
-    }
-    
-    @AfterClass
-    public static void tearDownClass() {
-    }
-    
     @Before
     public void setUp() {
-    }
-    
-    @After
-    public void tearDown() {
+        this.hashTagDaoColl = new HashTagDaoColl();
     }
 
     @Test

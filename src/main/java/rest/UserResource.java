@@ -5,6 +5,7 @@
  */
 package rest;
 
+import common.exceptions.UniqueConstraintViolationException;
 import domain.Tweet;
 import domain.User;
 import io.swagger.annotations.Api;
@@ -77,10 +78,13 @@ public class UserResource {
         if(user == null) {
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
-   
-        userService.addUser(user);            
-        URI id = URI.create(user.getUuid());
-        return Response.created(id).build();
+        try {
+            userService.addUser(user);            
+            URI id = URI.create(user.getUuid());
+            return Response.created(id).build();
+        } catch (UniqueConstraintViolationException ex ) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
+        }
     }
     
     @GET

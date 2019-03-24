@@ -14,7 +14,7 @@ import org.junit.Test;
  *
  * @author Yannick
  */
-public class TweetResourceTest {
+public class TweetResourceIT {
     
 
     @Before

@@ -50,8 +50,12 @@ public class HashTagDaoJPA implements HashTagDao{
         return getHashTags().size();
     }
     
+    /**
+     * Set the entity manager of HashTagDaoJPA
+     * 
+     * @param em The entity manager to be set
+     */
     public void setEm(EntityManager em) {
         this.em = em;
     }
-    
 }

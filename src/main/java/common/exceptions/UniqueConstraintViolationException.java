@@ -16,13 +16,16 @@
  */
 package common.exceptions;
 
+import javax.ejb.ApplicationException;
+
 /** 
  * User.Name is @unique, meaning it will throw an error if a {@link user} 
  * is persisted while the database contains another user with that name.
  *
  * @author Yannick
  */
-public class UniqueConstraintViolationException extends Exception {
+@ApplicationException(rollback=true)
+public class UniqueConstraintViolationException extends RuntimeException {
     
     public UniqueConstraintViolationException (String message, Throwable cause) {
         super(message, cause);
