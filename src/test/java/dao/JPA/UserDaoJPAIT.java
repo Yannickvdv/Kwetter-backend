@@ -22,7 +22,6 @@ import dao.user.UserDaoJPA;
 import domain.User;
 import domain.enums.Language;
 import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -31,7 +30,6 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 import javax.persistence.RollbackException;
-import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -45,11 +43,6 @@ public class UserDaoJPAIT {
     private EntityTransaction tx;
     private UserDaoJPA userDaoJPA;
     
-    User user0;
-    User user1;
-    User user2;
-    User user3;
-    
     @Before
     public void setUp() {
         try {
@@ -61,20 +54,7 @@ public class UserDaoJPAIT {
         tx = em.getTransaction();
         
         this.userDaoJPA = new UserDaoJPA();
-        this.userDaoJPA.setEm(em);
-        
-        this.user0 = new User("Bert", "Password0", Language.English);
-        this.user1 = new User("Henk", "Password1", Language.Dutch);
-        this.user2 = new User("Marc", "Password2", Language.English);
-        this.user3 = new User("Dennis", "Password3", Language.English);
-        
-        tx.begin();
-        this.userDaoJPA.addUser(this.user0);
-        this.userDaoJPA.addUser(this.user1);
-        this.userDaoJPA.addUser(this.user2);
-        this.userDaoJPA.addUser(this.user3);
-        tx.commit();
-    }
+        this.userDaoJPA.setEm(em);    }
 
     @Test 
     public void addUser() {
@@ -87,7 +67,7 @@ public class UserDaoJPAIT {
         List<User> users = userDaoJPA.getUsers();
         tx.commit();
         
-        assert(users.contains(this.user0));
+        assert(users.contains(newUser));
     }
     
     @Test(expected = RollbackException.class)
@@ -103,26 +83,5 @@ public class UserDaoJPAIT {
         tx.commit();
     }
     
-    @Test
-    public void testFollow() {
-        this.userDaoJPA.follow(this.user0, this.user1);
-        this.userDaoJPA.follow(this.user0, this.user2);
-        
-        assertEquals(Arrays.asList(this.user1, this.user2), this.userDaoJPA.findByName(this.user0.getName()).getFollowing());
-        assertEquals(Arrays.asList(this.user0), this.userDaoJPA.findByName(this.user1.getName()).getFollowers());
-        assertEquals(Arrays.asList(this.user0), this.userDaoJPA.findByName(this.user2.getName()).getFollowers()); 
-    }
-    
-    @Test
-    public void testUnfollow() {
-        //Follow
-        this.userDaoJPA.follow(this.user2, this.user3);
-        assertEquals(Arrays.asList(this.user3), this.userDaoJPA.findByName(this.user2.getName()).getFollowing());
-        assertEquals(Arrays.asList(this.user2), this.userDaoJPA.findByName(this.user3.getName()).getFollowers());
-        
-        //Unfollow
-        this.userDaoJPA.unfollow(this.user2, this.user3);
-        assertEquals(Arrays.asList(), this.userDaoJPA.findByName(this.user2.getName()).getFollowing());
-        assertEquals(Arrays.asList(), this.userDaoJPA.findByName(this.user3.getName()).getFollowers());
-    }
+   
 }

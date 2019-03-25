@@ -26,6 +26,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 import org.junit.Before;
+import org.junit.Test;
 
 /**
  *
@@ -51,9 +52,8 @@ public class HashTagDaoJPAIT {
         this.hashTagDaoJPA.setEm(em);
     }
 
-    // TODO add test methods here.
-    // The methods must be annotated with annotation @Test. For example:
-    //
-    // @Test
-    // public void hello() {}
+    @Test
+    public void addHashTag() {
+        
+    }
 }

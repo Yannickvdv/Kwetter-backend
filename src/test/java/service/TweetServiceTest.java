@@ -5,7 +5,12 @@
  */
 package service;
 
+import domain.Tweet;
 import domain.User;
+import domain.enums.Language;
+import java.util.Arrays;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -19,41 +24,38 @@ public class TweetServiceTest {
     private UserService userService;
     private HashTagService hashTagService;
     
-    User user0;
-    User user1;
-    User user2;
-    User user3;
     
     @Before
     public void setUp() {
-//        this.tweetService = new TweetService();
-//        this.userService = new UserService();
-//        this.hashTagService = new HashTagService();
-//        
-//        this.user0 = new User("user0", "barry", Language.English);
-//        this.user1 = new User("user1", "huh", Language.Dutch);
-//        this.user2 = new User("user2", "test", Language.English);
-//        this.user3 = new User("user3", "henk", Language.English);
-//        
-//        this.userService.addUser(user0);
-//        this.userService.addUser(user1);
-//        this.userService.addUser(user2);
-//        this.userService.addUser(user3);
+        this.tweetService = new TweetService();
+        this.userService = new UserService();
+        this.hashTagService = new HashTagService();
     }
     
 
     @Test
     public void tweetTest() {
-//        Tweet tweet1 = new Tweet("Hey there @user2 #Hello", this.user1);
-//        this.tweetService.addTweet(tweet1);
-//
-//        assertEquals(Arrays.asList(tweet1), this.userService.getUser(this.user1.getUuid()).getTweets());
-//        assertEquals(Arrays.asList(tweet1), this.userService.getUser(this.user2.getUuid()).getMentions());
-//        assertTrue(this.hashTagService.getHashTags().get(0).getText().equals("Hello"));
-//
-//        Tweet tweet2 = new Tweet("Hello World", this.user2);
-//        this.tweetService.addTweet(tweet2);
-//        assertEquals(Arrays.asList(tweet1, tweet2), this.tweetService.getTweets());
+        //Create users
+        User user0 = new User("user0", "huh", Language.Dutch);
+        User user1 = new User("user1", "heythere", Language.English);
+        
+        //Save them
+        this.userService.addUser(user0);
+        this.userService.addUser(user1);
+        
+        //Tweet with user0, while mentioning user1
+        Tweet tweet1 = new Tweet("Hey there @user1 #Hello", user0);
+        this.tweetService.addTweet(tweet1);
+
+        //Check if tweet and mention exist
+        assertEquals(Arrays.asList(tweet1), this.userService.getUser(user0.getUuid()).getTweets());
+        assertEquals(Arrays.asList(tweet1), this.userService.getUser(user1.getUuid()).getMentions());
+        assertTrue(this.hashTagService.getHashTags().get(0).getText().equals("Hello"));
+        
+        //Check if getTweets returns tweets from all users
+        Tweet tweet2 = new Tweet("Hello World", user1);
+        this.tweetService.addTweet(tweet2);
+        assertEquals(Arrays.asList(tweet1, tweet2), this.tweetService.getTweets());
     }
 
 }
