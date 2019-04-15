@@ -11,6 +11,7 @@ import domain.User;
 import io.swagger.annotations.Api;
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -24,6 +25,8 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import rest.dto.TweetDTO;
+import rest.dto.UserDTO;
 import service.KwetterService;
 import service.UserService;
 
@@ -45,9 +48,12 @@ public class UserResource {
     
     @GET
     public Response getUsers() {
-        System.out.println(userService.getUsers());
-        GenericEntity entity = new GenericEntity<List<User>> (userService.getUsers()) {};
-        return Response.ok(entity).build();
+        List<User> users = this.userService.getUsers();
+        
+        List<UserDTO> usersDTO = users.stream()
+                .map(UserDTO::new)
+                .collect(Collectors.toList());
+        return Response.ok(usersDTO).build();
     }
     
     @GET
@@ -57,7 +63,9 @@ public class UserResource {
         if (user == null) {
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
-        return Response.ok(user).build();
+        
+        UserDTO userDTO = new UserDTO(user, true);
+        return Response.ok(userDTO).build();
     }
     
     @PUT
@@ -91,9 +99,12 @@ public class UserResource {
     @Path("{uuid}/tweets")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getUserTweets(@PathParam("uuid") String uuid) {
-        //TODO: Might have to use tweetservice?
         User user = userService.getUser(uuid);
-        GenericEntity tweets = new GenericEntity<List<Tweet>>(user.getTweets()) {};
+        List<TweetDTO> tweetDTO = user.getTweets().stream()
+                .map(TweetDTO::new)
+                .collect(Collectors.toList());
+        
+        GenericEntity tweets = new GenericEntity<List<TweetDTO>>(tweetDTO) {};
         return Response.ok(tweets).build();
     }
     

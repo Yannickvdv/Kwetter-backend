@@ -16,7 +16,8 @@ import java.util.List;
 public interface TweetDao {
 
     /**
-     *
+     * Get the existing tweets
+     * 
      * @return The existing tweets
      */
     List<Tweet> getTweets();

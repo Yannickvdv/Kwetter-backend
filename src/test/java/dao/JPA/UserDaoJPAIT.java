@@ -22,6 +22,7 @@ import dao.user.UserDaoJPA;
 import domain.User;
 import domain.enums.Language;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,6 +31,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 import javax.persistence.RollbackException;
+import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -83,5 +85,53 @@ public class UserDaoJPAIT {
         tx.commit();
     }
     
-   
+    @Test
+    public void testFollow() {
+        User user0 = new User("user0", "barry", Language.English);
+        User user1 = new User("user1", "huh", Language.Dutch);
+        User user2 = new User("user2", "what", Language.Dutch);
+
+        tx.begin();
+        this.userDaoJPA.addUser(user0);
+        this.userDaoJPA.addUser(user1);
+        this.userDaoJPA.addUser(user2);
+        tx.commit();
+        
+        tx.begin();
+        this.userDaoJPA.follow(user0, user1);
+        this.userDaoJPA.follow(user0, user2);
+        tx.commit();
+        
+        tx.begin();
+        assertEquals(Arrays.asList(user1, user2), this.userDaoJPA.findByName(user0.getName()).getFollowing());
+        assertEquals(Arrays.asList(user0), this.userDaoJPA.findByName(user1.getName()).getFollowers());
+        assertEquals(Arrays.asList(user0), this.userDaoJPA.findByName(user2.getName()).getFollowers()); 
+        tx.commit();
+    }
+    
+    @Test
+    public void testUnfollow() {
+        User user0 = new User("user0", "henk", Language.English);
+        User user1 = new User("user1", "test", Language.English);
+        
+        //Add users to user service
+        tx.begin();
+        this.userDaoJPA.addUser(user0);
+        this.userDaoJPA.addUser(user1);
+        tx.commit();
+        
+        //Follow
+        tx.begin();
+        this.userDaoJPA.follow(user0, user1);
+        assertEquals(Arrays.asList(user1), this.userDaoJPA.findByName(user0.getName()).getFollowing());
+        assertEquals(Arrays.asList(user0), this.userDaoJPA.findByName(user1.getName()).getFollowers());
+        tx.commit();
+        
+        //Unfollow
+        tx.begin();
+        this.userDaoJPA.unfollow(user0, user1);
+        assertEquals(Arrays.asList(), this.userDaoJPA.findByName(user0.getName()).getFollowing());
+        assertEquals(Arrays.asList(), this.userDaoJPA.findByName(user1.getName()).getFollowers());
+        tx.commit();
+    }
 }

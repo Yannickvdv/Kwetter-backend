@@ -9,7 +9,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -58,8 +57,8 @@ public class Tweet implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date insertedAt;
     
+    @Getter
     @OneToMany(cascade = CascadeType.ALL, fetch=FetchType.EAGER)
-    @JsonbTransient
     @JoinTable(name = "tweet_has_likes",
             joinColumns = @JoinColumn(name = "tweet_uuid", referencedColumnName = "uuid"),
             inverseJoinColumns = @JoinColumn(name = "user_uuid", referencedColumnName = "uuid"))
@@ -67,7 +66,6 @@ public class Tweet implements Serializable {
     
     @Getter
     @ManyToMany(mappedBy = "tweets")
-    @JsonbTransient
     private List<HashTag> hashTags;
     
     public Tweet() {

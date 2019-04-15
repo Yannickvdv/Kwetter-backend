@@ -19,6 +19,7 @@ public class JAXRSConfiguration extends Application {
         beanConfig.setSchemes(new String[]{"http"});
         beanConfig.setHost("localhost:8080");
         beanConfig.setBasePath("/kwetter/api");
+        beanConfig.setVersion("1");
         beanConfig.setResourcePackage("rest");
         beanConfig.setPrettyPrint(true);
         beanConfig.setScan();

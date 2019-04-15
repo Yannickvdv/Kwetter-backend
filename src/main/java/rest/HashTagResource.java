@@ -8,6 +8,7 @@ package rest;
 import domain.HashTag;
 import io.swagger.annotations.Api;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -16,6 +17,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import rest.dto.HashTagDTO;
 import service.HashTagService;
 
 /**
@@ -34,6 +36,9 @@ public class HashTagResource {
     @Produces({MediaType.APPLICATION_JSON})
     public Response getHashTags() {
         GenericEntity entity = new GenericEntity<List<HashTag>> (hashTagService.getHashTags()) {};
+        List<HashTagDTO> hashTagDTO = hashTagService.getHashTags().stream()
+                .map(HashTagDTO::new)
+                .collect(Collectors.toList());
         return Response.ok(entity).build();
     }
 }

@@ -5,17 +5,17 @@
  */
 package rest;
 
-import domain.Tweet;
 import io.swagger.annotations.Api;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import rest.dto.TweetDTO;
 import service.TweetService;
 
 /**
@@ -33,7 +33,10 @@ public class TweetResource {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     public Response getTweets() {
-        GenericEntity entity = new GenericEntity<List<Tweet>> (tweetService.getTweets()) {};
-        return Response.ok(entity).build();
+        List<TweetDTO> tweetDTO = tweetService.getTweets().stream()
+                .map(TweetDTO::new)
+                .collect(Collectors.toList());
+        
+        return Response.ok(tweetDTO).build();
     }
 }

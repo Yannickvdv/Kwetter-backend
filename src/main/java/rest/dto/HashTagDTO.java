@@ -14,20 +14,38 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package service;
+package rest.dto;
 
-import org.junit.Before;
+import domain.HashTag;
+import java.util.List;
+import java.util.stream.Collectors;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  *
  * @author Yannick
  */
-public class UserServiceTest {
+@Getter @Setter
+public class HashTagDTO {
     
-    private UserService userService;
+    private String uuid;
+    private String text;
     
-    @Before
-    public void setUp() {
-        this.userService = new UserService();
+    private List<TweetDTO> tweets;
+    
+    public HashTagDTO(HashTag hashTag) {
+        this.uuid = hashTag.getUuid();
+        this.text = hashTag.getText();
+    }
+    
+    public HashTagDTO(HashTag hashTag, boolean fat) {
+        this(hashTag);
+        
+        if (fat) {
+            this.tweets = hashTag.getTweets().stream()
+                    .map(TweetDTO::new)
+                    .collect(Collectors.toList());
+        }
     }
 }

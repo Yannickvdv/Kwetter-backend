@@ -77,7 +77,6 @@ public class UserResourceIT {
         Assert.assertEquals(uuid, userJsonObject.get("uuid"));
     }
     
-    //Still fails, see exception branch
     @Test
     public void duplicateUserName() {
         User user1 = new User("Harry", "test1", Language.Dutch);
