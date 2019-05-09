@@ -213,21 +213,155 @@
                 <version>1.5.3</version>
                 <executions>
                     <execution>
+                          <id>swagger-ui</id>
                         <phase>prepare-package</phase>
                         <goals>
                             <goal>replace</goal>
                         </goals>
+                        <configuration>
+                            <file>${project.build.directory}/swagger-ui/META-INF/resources/webjars/swagger-ui/${swagger-ui.version}/index.html</file>
+                            <replacements>
+                                <replacement>
+                                    <token>https://petstore.swagger.io/v2/swagger.json</token>
+                                    <value>${baseurl}/${contextroot}/api/openapi</value>
+                                </replacement>
+                            </replacements>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>glassfish</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>replace</goal>
+                        </goals>
+                        <configuration>
+                            <includes>
+                                <include>${project.build.directory}/${project.build.finalName}/WEB-INF/glassfish-resources.xml</include>
+                                <include>${project.build.directory}/${project.build.finalName}/WEB-INF/glassfish-web.xml</include>
+                                <include>${project.build.directory}/${project.build.finalName}/WEB-INF/openapi.yaml</include>
+                                <include>${project.build.directory}/${project.build.finalName}/template/layout.xhtml</include>
+                            </includes>
+                            <replacements>
+                                <replacement>
+                                    <token>IP-ADDRESS</token>
+                                    <value>${db.ip}</value>
+                                </replacement>
+                                <replacement>
+                                    <token>PORT</token>
+                                    <value>${db.port}</value>
+                                </replacement>
+                                <replacement>
+                                    <token>DATABASENAME</token>
+                                    <value>${db.databasename}</value>
+                                </replacement>
+                                <replacement>
+                                    <token>USERNAME</token>
+                                    <value>${db.username}</value>
+                                </replacement>
+                                <replacement>
+                                    <token>PASSWORD</token>
+                                    <value>${db.password}</value>
+                                </replacement>
+                                <replacement>
+                                    <token>BASEURL</token>
+                                    <value>${baseurl}</value>
+                                </replacement>
+                                <replacement>
+                                    <token>CONTEXTROOT</token>
+                                    <value>${contextroot}</value>
+                                </replacement>
+                                <replacement>
+                                    <token>POMVERSION</token>
+                                    <value>${project.version}</value>
+                                </replacement>
+                            </replacements>
+                        </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <!-- Load custom properties file -->
+            <!-- https://mvnrepository.com/artifact/org.codehaus.mojo/properties-maven-plugin -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>properties-maven-plugin</artifactId>
+                <version>1.0.0</version>
+                <executions>
+                    <execution>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>read-project-properties</goal>
+                        </goals>
+                        <configuration>
+                            <files>
+                                <file>${basedir}/src/main/resources/kwetter.properties</file>
+                            </files>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- Jacoco -->
+            <plugin>
+                <!-- https://mvnrepository.com/artifact/org.jacoco/jacoco-maven-plugin -->
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.3</version>
                 <configuration>
-                    <file>${project.build.directory}/swagger-ui/META-INF/resources/webjars/swagger-ui/${swagger-ui.version}/index.html</file>
-                    <replacements>
-                        <replacement>
-                            <token>https://petstore.swagger.io/v2/swagger.json</token>
-                            <value>http://localhost:8080/openapi</value>
-                        </replacement>
-                    </replacements>
+                    <append>true</append>
                 </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>post-unit-test</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- Deploy server configuration -->
+            <plugin>
+                <!-- https://mvnrepository.com/artifact/org.codehaus.cargo/cargo-maven2-plugin -->
+                <groupId>org.codehaus.cargo</groupId>
+                <artifactId>cargo-maven2-plugin</artifactId>
+                <version>1.7.3</version>
+                <configuration>
+                    <container>
+                        <containerId>glassfish5x</containerId>
+                        <type>remote</type>
+                    </container>
+                    <configuration>
+                        <type>runtime</type>
+                        <properties>
+                            <cargo.hostname>${payara.hostname}</cargo.hostname>
+                            <cargo.remote.username>${payara.username}</cargo.remote.username>
+                            <cargo.remote.password><![CDATA[${payara.password}]]></cargo.remote.password>
+                            <cargo.glassfish.domain.name>/${contextroot}</cargo.glassfish.domain.name>
+                        </properties>
+                    </configuration>
+                    <deployables>
+                        <deployable>
+                            <groupId>${project.groupId}</groupId>
+                            <artifactId>${project.artifactId}</artifactId>
+                            <type>war</type>
+                            <properties>
+                                <context>/${contextroot}</context>
+                            </properties>
+                        </deployable>
+                    </deployables>
+                </configuration>
+                <dependencies>
+                    <!-- https://mvnrepository.com/artifact/org.glassfish.main.deployment/deployment-client -->
+                    <dependency>
+                        <groupId>org.glassfish.main.deployment</groupId>
+                        <artifactId>deployment-client</artifactId>
+                        <version>5.1.0</version>
+                    </dependency>
+                </dependencies>
             </plugin>
         </plugins>
         <testResources>

@@ -3,9 +3,9 @@ prettyPrint: true
 cacheTTL: 0
 openAPI:
   info:
-    version: 1
+    version: POMVERSION
     title: Kwetter
     description: API endpoints for kwetter
     termsOfService: http://swagger.io/terms/
   servers:  
-    - url: http://localhost:8080/kwetter
+    - url: BASEURL/CONTEXTROOT

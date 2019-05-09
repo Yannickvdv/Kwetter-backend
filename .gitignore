@@ -1,3 +1,5 @@
+# Ignore sensitive properties file
+kwetter.properties
 
 # Created by https://www.gitignore.io/api/java,maven,netbeans,intellij,java-web
 # Edit at https://www.gitignore.io/?templates=java,maven,netbeans,intellij,java-web
