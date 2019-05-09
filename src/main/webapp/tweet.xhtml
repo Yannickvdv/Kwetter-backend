@@ -23,8 +23,24 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <ui:composition template="/template/layout.xhtml">
             <ui:define name="body">
                 <h1>Tweets</h1>
+                <h:form>
+                    <div class="container">
+                        <div class="row justify-content-md-center">
+                            <div class="form-group">
+                                <h:outputLabel value="Search for username" style="display:block; text-align:center;" for="inputName"/>
+                                <h:inputText id="inputName" class="form-control" value="#{tweetBean.username}">
+                                    <f:ajax event="keyup" execute="filter" render="kweets" />
+                                </h:inputText>
+                            </div>
+                        </div>
+                    </div>
+                </h:form>
                 <h:form id="tweets">
                     <h:dataTable class="table" value="#{tweetBean.getTweets()}" var="tweet">
+                        <h:column>
+                            <f:facet name="header">ID</f:facet>
+                            <h:outputLabel value="#{tweet.uuid}"/>
+                        </h:column>
                         <h:column>
                             <f:facet name="header">Username</f:facet>
                             <h:outputLabel value="#{tweet.user.name}"/>
@@ -36,6 +52,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                         <h:column>
                             <f:facet name="header">Text</f:facet>
                             <h:outputLabel value="#{tweet.text}"/>
+                        </h:column>
+                        <h:column>
+                            <h:commandButton action="#{tweetBean.removeTweet(tweet)}" class="btn btn-danger" value="Remove"/>
                         </h:column>
                     </h:dataTable>
                 </h:form>

@@ -16,53 +16,37 @@
  */
 package bean;
 
-import domain.Tweet;
 import domain.User;
+import domain.enums.Role;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
-import lombok.Getter;
-import lombok.Setter;
-import service.TweetService;
 import service.UserService;
 
 /**
  *
  * @author Yannick
  */
-@Named("tweetBean")
+@Named("userBean")
 @RequestScoped
-public class TweetBean implements Serializable {
-
-    @Inject
-    private TweetService tweetService;
+public class UserBean implements Serializable{
+    
     @Inject
     private UserService userService;
-
-    @Getter
-    @Setter
-    private String username;
-
-    public List<Tweet> getTweets() {
-        List<Tweet> tweets = new ArrayList<>();
-        if (this.getUsername() == null || this.getUsername().isEmpty()) {
-            tweets.addAll(this.tweetService.getTweets());
-        } else {
-            User user = this.userService.findByName(username);
-            if (user != null) {
-                List<Tweet> userTweets = user.getTweets();
-                if (userTweets != null) {
-                    tweets.addAll(userTweets);
-                }
-            }
-        }
-        return tweets;
+    
+    public List<User> getUsers(String username) {
+        if (username == null || username.isEmpty())
+            return this.userService.getUsers();
+        else
+            return new ArrayList<>(Arrays.asList(this.userService.findByName(username)));
     }
 
-    public void removeTweet(Tweet tweet) {
-        this.tweetService.remove(tweet);
+    public void updateUserRole(User user, String role) {
+        user.setRole(Role.valueOf(role));
+        this.userService.editUser(user);
     }
 }

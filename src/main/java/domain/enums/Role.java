@@ -10,6 +10,7 @@ package domain.enums;
  * @author Yannick
  */
 public enum Role {
-    Moderator,
-    User  
+    ADMINISTRATOR,
+    MODERATOR,
+    USER  
 }

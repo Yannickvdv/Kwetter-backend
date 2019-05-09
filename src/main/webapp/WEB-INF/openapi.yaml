@@ -1,3 +1,4 @@
+readAllResources: false
 prettyPrint: true
 cacheTTL: 0
 openAPI:
@@ -6,5 +7,5 @@ openAPI:
     title: Kwetter
     description: API endpoints for kwetter
     termsOfService: http://swagger.io/terms/
-  servers:
+  servers:  
     - url: http://localhost:8080/kwetter

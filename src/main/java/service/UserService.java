@@ -32,7 +32,7 @@ public class UserService {
     }
     
     public User findByName(String name) {
-        return this.userDao.getUser(name);
+        return this.userDao.findByName(name);
     }
 
     public List<User> getUsers() {

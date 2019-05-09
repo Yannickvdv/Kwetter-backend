@@ -10,7 +10,6 @@ import domain.enums.Role;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -24,15 +23,20 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 /**
  *
  * @author Yannick
  */
 @Entity
+@Getter
+@Setter
 @Table(name = "users")
 @NamedQueries({
     @NamedQuery(name = "user.findByUuid", query = "SELECT u FROM User u WHERE u.uuid = :uuid"),
@@ -40,64 +44,63 @@ import org.hibernate.annotations.GenericGenerator;
     @NamedQuery(name = "user.getUsers", query = "SELECT u FROM User u")})
 public class User implements Serializable {
     
-    @Getter
+    @Setter(AccessLevel.NONE)
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "org.hibernate.id.UUIDGenerator")
     String uuid;
     
 
-    @Getter @Setter 
     @Column(nullable = false, unique = true)
     private String name;
-    @Getter @Setter 
+
     private String location;
-    @Getter @Setter 
+
     private String website;
-    @Getter @Setter 
+
     @Column(nullable = false)
     private String password;
-    @Getter @Setter
+
     @Column(length = 160)
     private String bio;
-    @Getter @Setter
+
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
-    @Getter @Setter 
+
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Language language;
-    @Getter @Setter 
+
     private String photo;
     
-    @Getter
+    @Setter(AccessLevel.NONE)
+    @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
-    @JsonbTransient
     private List<Tweet> tweets;
     
-    @Getter
+    @Setter(AccessLevel.NONE)
+    @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(cascade = CascadeType.REMOVE)
     @JoinTable(name = "user_is_mentioned",
             joinColumns = @JoinColumn(name = "user_uuid", referencedColumnName = "uuid"),
             inverseJoinColumns = @JoinColumn(name = "tweet_uuid", referencedColumnName = "uuid"))
-    @JsonbTransient
     private List<Tweet> mentions;
     
-    @Getter
+    @Setter(AccessLevel.NONE)
+    @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(cascade = CascadeType.REMOVE)
     @JoinTable(name = "user_is_following",
             joinColumns = @JoinColumn(name = "user_uuid", referencedColumnName = "uuid"),
             inverseJoinColumns = @JoinColumn(name = "following_uuid", referencedColumnName = "uuid"))
-    @JsonbTransient
     private List<User> following; 
     
-    @Getter
+    @Setter(AccessLevel.NONE)
+    @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(cascade = CascadeType.REMOVE)
     @JoinTable(name = "user_has_followers",
             joinColumns = @JoinColumn(name = "user_uuid", referencedColumnName = "uuid"),
             inverseJoinColumns = @JoinColumn(name = "follower_uuid", referencedColumnName = "uuid"))
-    @JsonbTransient
     private List<User> followers;
     
      public User() {
@@ -110,7 +113,7 @@ public class User implements Serializable {
         this.following = new ArrayList<>();
         this.followers = new ArrayList<>();
         
-        this.role = Role.User;
+        this.role = Role.USER;
         
         this.name = name;
         this.password = password;
@@ -169,7 +172,7 @@ public class User implements Serializable {
     /**
      * Remove a specific {@link User} this {@link User} is following.
      * 
-     * @param follower The follower to be removed from the followers list.
+     * @param following The following to be removed from the following list.
      */
     public void removeFollowing (User following){
         this.following.remove(following);

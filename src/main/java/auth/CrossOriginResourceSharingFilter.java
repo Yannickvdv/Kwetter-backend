@@ -14,32 +14,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package rest;
+package auth;
 
-import io.restassured.RestAssured;
-import static io.restassured.RestAssured.given;
-import org.junit.Before;
-import org.junit.Test;
+import javax.ws.rs.container.ContainerRequestContext;
+import javax.ws.rs.container.ContainerResponseContext;
+import javax.ws.rs.container.ContainerResponseFilter;
+import javax.ws.rs.ext.Provider;
 
 /**
  *
  * @author Yannick
  */
-public class HashTagResourceIT {
-    
-    @Before
-    public void setUp() {
-        RestAssured.port = 8080;
-        RestAssured.baseURI = "http://localhost";
-        RestAssured.basePath = "/kwetter/api/";
-    }
+@Provider
+public class CrossOriginResourceSharingFilter implements ContainerResponseFilter {
 
-    @Test
-    public void getUsers() {
-        given()
-        .when()
-            .get("/hashtags")
-        .then()
-            .statusCode(200);
+    @Override
+    public void filter(ContainerRequestContext requestContext, ContainerResponseContext response) {
+        response.getHeaders().putSingle("Access-Control-Allow-Origin", "*");
+        response.getHeaders().putSingle("Access-Control-Allow-Methods", "OPTIONS, GET, POST, PUT, DELETE");
+        response.getHeaders().putSingle("Access-Control-Allow-Headers", "Content-Type");
     }
+    
 }

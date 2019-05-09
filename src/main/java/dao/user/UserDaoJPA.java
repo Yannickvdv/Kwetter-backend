@@ -6,6 +6,7 @@
 package dao.user;
 
 import common.exceptions.UniqueConstraintViolationException;
+import dao.helpers.JPAResultHelper;
 import domain.User;
 import domain.enums.Role;
 import java.util.List;
@@ -83,8 +84,7 @@ public class UserDaoJPA implements UserDao {
         TypedQuery<User> query = this.em.createNamedQuery("user.findByUuid", User.class);
         query.setParameter("uuid", uuid);
         
-        List<User> result = query.getResultList();
-        return result.get(0);
+        return JPAResultHelper.getSingleResult(query);
     }
     
     @Override
@@ -92,8 +92,7 @@ public class UserDaoJPA implements UserDao {
         TypedQuery<User> query = this.em.createNamedQuery("user.findByName", User.class);
         query.setParameter("name", name);
         
-        List<User> result = query.getResultList();
-        return result.get(0);
+        return JPAResultHelper.getSingleResult(query);
     }
 
     @Override

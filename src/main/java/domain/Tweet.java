@@ -27,44 +27,42 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import lombok.Getter;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 /**
  *
  * @author Yannick
  */
+@Getter
 @Entity
 @Table(name = "tweets")
 @NamedQueries({
     @NamedQuery(name = "tweet.getTweets", query = "SELECT t FROM Tweet t")})
 public class Tweet implements Serializable {
     
-    @Getter
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "org.hibernate.id.UUIDGenerator")
     private String uuid;
     
-    @Getter
     @Column(length = 140)
     private String text;
     
-    @Getter
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_uuid")
     private User user;
     
-    @Getter
     @Temporal(TemporalType.DATE)
     private Date insertedAt;
     
-    @Getter
     @OneToMany(cascade = CascadeType.ALL, fetch=FetchType.EAGER)
     @JoinTable(name = "tweet_has_likes",
             joinColumns = @JoinColumn(name = "tweet_uuid", referencedColumnName = "uuid"),
             inverseJoinColumns = @JoinColumn(name = "user_uuid", referencedColumnName = "uuid"))
     private List<User> likes;   
-    
-    @Getter
+
+    @LazyCollection(LazyCollectionOption.FALSE)
     @ManyToMany(mappedBy = "tweets")
     private List<HashTag> hashTags;
     
