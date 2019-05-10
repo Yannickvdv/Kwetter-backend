@@ -7,7 +7,6 @@
     <packaging>war</packaging>    
     <properties>
         <failOnMissingWebXml>false</failOnMissingWebXml> 
-        <skipTests>false</skipTests>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <netbeans.hint.license>gpl30</netbeans.hint.license>
         
