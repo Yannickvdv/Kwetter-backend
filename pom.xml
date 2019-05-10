@@ -187,12 +187,12 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <!-- Add Swagger UI resources to the war file. -->
+               <plugin>
                 <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-war-plugin -->
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
                 <version>3.2.2</version>
+                <!-- Add Swagger UI resources to the war file -->
                 <configuration>
                     <webResources combine.children="append">
                         <resource>
@@ -204,6 +204,26 @@
                         </resource>
                     </webResources>
                 </configuration>
+                <!-- Prepare plugin in order to replace with other plugin -->
+                <executions>
+                    <execution>
+                        <id>prepare-war</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>exploded</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>default-war</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>war</goal>
+                        </goals>
+                        <configuration>
+                            <warSourceDirectory>${project.build.directory}/${project.build.finalName}</warSourceDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <!-- Replace the OpenAPI specification example URL with the local one. -->
