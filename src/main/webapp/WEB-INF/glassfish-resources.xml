@@ -40,6 +40,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <property name="URL" value="jdbc:mysql://IP-ADDRESS:PORT/DATABASENAME?zeroDateTimeBehavior=convertToNull"/>
         <property name="driverClass" value="com.mysql.jdbc.Driver"/>
     </jdbc-connection-pool>
-    <jdbc-resource enabled="true" jndi-name="jdbc/kwetter" object-type="user"
+    <jdbc-resource enabled="true" jndi-name="java:app/kwetter" object-type="user"
                    pool-name="mysql_kwetterPool"/>
 </resources>
