@@ -14,14 +14,14 @@ import org.junit.Test;
  *
  * @author Yannick
  */
-public class TweetResourceTest {
+public class TweetResourceIT {
     
 
     @Before
     public void setUp() {
         RestAssured.port = 8080;
         RestAssured.baseURI = "http://localhost";
-        RestAssured.basePath = "/Kwetter/api/";
+        RestAssured.basePath = "/kwetter/api/";
     }
     
     @Test

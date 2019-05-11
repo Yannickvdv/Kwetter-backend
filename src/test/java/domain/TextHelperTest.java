@@ -8,12 +8,8 @@ package domain;
 import domain.helpers.TextHelper;
 import java.util.Arrays;
 import java.util.List;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.Test;
 
 /**
  *
@@ -26,23 +22,6 @@ public class TextHelperTest {
     public TextHelperTest() {
         this.textHelper = new TextHelper();
     }
-    
-    @BeforeClass
-    public static void setUpClass() {
-    }
-    
-    @AfterClass
-    public static void tearDownClass() {
-    }
-    
-    @Before
-    public void setUp() {
-    }
-    
-    @After
-    public void tearDown() {
-    }
-
    
     @Test
     public void testSearchHashTag() {

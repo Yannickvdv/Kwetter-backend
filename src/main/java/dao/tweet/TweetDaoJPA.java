@@ -63,4 +63,12 @@ public class TweetDaoJPA implements TweetDao {
         this.editTweet(tweet);
     }
     
+    /**
+     * Set the entity manager of TweetDaoJPA
+     * 
+     * @param em The entity manager to be set
+     */
+    public void setEm(EntityManager em) {
+        this.em = em;
+    }
 }

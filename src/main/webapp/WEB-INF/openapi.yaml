@@ -1,0 +1,11 @@
+readAllResources: false
+prettyPrint: true
+cacheTTL: 0
+openAPI:
+  info:
+    version: POMVERSION
+    title: Kwetter
+    description: API endpoints for kwetter
+    termsOfService: http://swagger.io/terms/
+  servers:  
+    - url: BASEURL/CONTEXTROOT

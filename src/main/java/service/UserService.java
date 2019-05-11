@@ -5,6 +5,7 @@
  */
 package service;
 
+import common.exceptions.UniqueConstraintViolationException;
 import dao.user.UserDao;
 import domain.User;
 import domain.enums.Role;
@@ -22,7 +23,7 @@ public class UserService {
     @Inject
     private UserDao userDao;
     
-    public void addUser(User user) {
+    public void addUser(User user) throws UniqueConstraintViolationException {
         this.userDao.addUser(user);
     }
 
@@ -31,7 +32,7 @@ public class UserService {
     }
     
     public User findByName(String name) {
-        return this.userDao.getUser(name);
+        return this.userDao.findByName(name);
     }
 
     public List<User> getUsers() {

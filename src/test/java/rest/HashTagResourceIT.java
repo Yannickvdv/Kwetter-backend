@@ -25,13 +25,13 @@ import org.junit.Test;
  *
  * @author Yannick
  */
-public class HashTagResourceTest {
+public class HashTagResourceIT {
     
     @Before
     public void setUp() {
         RestAssured.port = 8080;
         RestAssured.baseURI = "http://localhost";
-        RestAssured.basePath = "/Kwetter/api/";
+        RestAssured.basePath = "/kwetter/api/";
     }
 
     @Test

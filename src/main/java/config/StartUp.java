@@ -5,6 +5,7 @@
  */
 package config;
 
+import common.exceptions.UniqueConstraintViolationException;
 import domain.Tweet;
 import domain.User;
 import domain.enums.Language;
@@ -37,8 +38,12 @@ public class StartUp {
         User user1 = new User("Bart", "Eindhoven", Language.English);
         User user2 = new User("Henk", "New York", Language.Dutch);
         
-        userService.addUser(user1);
-        userService.addUser(user2);
+        try {
+            userService.addUser(user1);
+            userService.addUser(user2);
+        } catch (UniqueConstraintViolationException ex) {
+            System.out.println(ex);
+        }
         
         userService.follow(user2, user1);
         

@@ -5,15 +5,19 @@
  */
 package dao.user;
 
+import common.exceptions.UniqueConstraintViolationException;
+import dao.helpers.JPAResultHelper;
 import domain.User;
 import domain.enums.Role;
 import java.util.List;
 import javax.annotation.PostConstruct;
+import javax.ejb.EJBTransactionRolledbackException;
 import javax.ejb.Stateless;
 import javax.enterprise.inject.Default;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import javax.validation.ConstraintViolationException;
 
 /**
  *
@@ -31,8 +35,18 @@ public class UserDaoJPA implements UserDao {
     }
     
     @Override
-    public void addUser(User user) {
-        this.em.persist(user);
+    public void addUser(User user) throws UniqueConstraintViolationException {
+        try {
+            this.em.persist(user);
+        } catch (EJBTransactionRolledbackException ex) {
+            Throwable t = ex.getCause();
+            while ((t != null) && !(t instanceof ConstraintViolationException)) {
+                t = t.getCause();
+            }
+            if (t instanceof ConstraintViolationException) {
+                throw new UniqueConstraintViolationException("User name must be unique", ex);
+            }    
+        }
     }
 
     @Override
@@ -70,8 +84,7 @@ public class UserDaoJPA implements UserDao {
         TypedQuery<User> query = this.em.createNamedQuery("user.findByUuid", User.class);
         query.setParameter("uuid", uuid);
         
-        List<User> result = query.getResultList();
-        return result.get(0);
+        return JPAResultHelper.getSingleResult(query);
     }
     
     @Override
@@ -79,8 +92,7 @@ public class UserDaoJPA implements UserDao {
         TypedQuery<User> query = this.em.createNamedQuery("user.findByName", User.class);
         query.setParameter("name", name);
         
-        List<User> result = query.getResultList();
-        return result.get(0);
+        return JPAResultHelper.getSingleResult(query);
     }
 
     @Override
@@ -88,4 +100,13 @@ public class UserDaoJPA implements UserDao {
         TypedQuery<User> query = this.em.createNamedQuery("user.getUsers", User.class);
         return query.getResultList();
     }    
+    
+    /**
+     * Set the entity manager of UserDaoJPA
+     * 
+     * @param em The entity manager to be set
+     */
+    public void setEm(EntityManager em) {
+        this.em = em;
+    }
 }

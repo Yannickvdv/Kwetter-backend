@@ -5,6 +5,7 @@
  */
 package dao.user;
 
+import common.exceptions.UniqueConstraintViolationException;
 import domain.User;
 import domain.enums.Role;
 import java.util.List;
@@ -20,7 +21,7 @@ public interface UserDao {
      *
      * @param user The {@link User} to add
      */
-    void addUser(User user);
+    void addUser(User user) throws UniqueConstraintViolationException;
     
     /**
      * Edit a {@link User} to a new user object

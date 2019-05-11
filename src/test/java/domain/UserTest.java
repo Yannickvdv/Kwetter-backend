@@ -8,12 +8,8 @@ package domain;
 import domain.enums.Language;
 import java.util.Arrays;
 import java.util.List;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.Test;
 
 /**
  *
@@ -42,22 +38,6 @@ public class UserTest {
         this.user7 = new User("Adrianus", "Password7", Language.English);
         this.user8 = new User("JavaScript", "Password8", Language.English);
         this.user9 = new User("Asta", "Password9", Language.Dutch);
-    }
-    
-    @BeforeClass
-    public static void setUpClass() {
-    }
-    
-    @AfterClass
-    public static void tearDownClass() {
-    }
-    
-    @Before
-    public void setUp() {
-    }
-    
-    @After
-    public void tearDown() {
     }
     
     @Test
