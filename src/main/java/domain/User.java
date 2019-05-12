@@ -16,6 +16,7 @@
  */
 package domain;
 
+import domain.auth.JWT;
 import domain.enums.Language;
 import domain.enums.Role;
 import java.io.Serializable;
@@ -33,6 +34,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -114,6 +116,9 @@ public class User implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "follower_uuid", referencedColumnName = "uuid"))
     private List<User> followers;
     
+    @OneToOne
+    private JWT jwt;
+
      public User() {
         this("", "", Language.Dutch);
     }

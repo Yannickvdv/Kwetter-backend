@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2019 Yannick
  *
  * This program is free software: you can redistribute it and/or modify
@@ -14,39 +14,42 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package rest;
+package dao.auth;
 
-import io.swagger.annotations.Api;
-import java.util.List;
-import java.util.stream.Collectors;
+import dao.helpers.JPAResultHelper;
+import domain.auth.JWT;
 import javax.ejb.Stateless;
-import javax.inject.Inject;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import rest.dto.HashTagDTO;
-import service.HashTagService;
+import javax.enterprise.inject.Default;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 /**
  *
  * @author Yannick
  */
-@Path("hashtags")
-@Api
 @Stateless
-public class HashTagResource {
-    
-    @Inject
-    private HashTagService hashTagService;
+@Default
+public class JwtDaoJPA {
 
-    @GET
-    @Produces({MediaType.APPLICATION_JSON})
-    public Response getHashTags() {
-        List<HashTagDTO> hashTagDTO = hashTagService.getHashTags().stream()
-                .map(HashTagDTO::new)
-                .collect(Collectors.toList());
-        return Response.ok(hashTagDTO).build();
+    @PersistenceContext
+    private EntityManager em;
+
+    public void createJwt(JWT jwt) {
+        this.em.persist(jwt);
     }
+
+    public void editJWT(JWT jwt) {
+        this.em.merge(jwt);
+    }
+
+    public void remove(JWT jwt) {
+        this.em.remove(this.em.merge(jwt));
+    }
+    
+    public Boolean tokenExists(String token) {
+    return JPAResultHelper.getSingleResult(
+            this.em.createNamedQuery("JWT.getJWT", JWT.class)
+                    .setParameter("token", token)) != null;
+    }
+
 }

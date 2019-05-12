@@ -16,17 +16,23 @@
  */
 package rest;
 
+import domain.Tweet;
+import domain.enums.Role;
 import io.swagger.annotations.Api;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import rest.dto.TweetDTO;
+import rest.utils.RoleSecured;
 import service.TweetService;
 
 /**
@@ -49,5 +55,18 @@ public class TweetResource {
                 .collect(Collectors.toList());
         
         return Response.ok(tweetDTO).build();
+    }
+    
+    @DELETE
+    @Path("{uuid}")
+    @RoleSecured({Role.MODERATOR, Role.ADMINISTRATOR})
+    public Response removeTweet(@PathParam("uuid") String uuid) {
+        Tweet tweet = this.tweetService.getTweet(uuid);
+        if(tweet == null) {
+            throw new WebApplicationException(Response.Status.NOT_FOUND);
+        }
+        
+        this.tweetService.remove(tweet);
+        return Response.ok().build();
     }
 }

@@ -19,7 +19,9 @@ package rest;
 import common.exceptions.UniqueConstraintViolationException;
 import domain.Tweet;
 import domain.User;
+import domain.enums.Role;
 import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -38,6 +40,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import rest.dto.TweetDTO;
 import rest.dto.UserDTO;
+import rest.utils.RoleSecured;
 import service.KwetterService;
 import service.UserService;
 
@@ -46,8 +49,12 @@ import service.UserService;
  * @author Yannick
  */
 @Path("users")
-@Produces({MediaType.APPLICATION_JSON})
 @Api
+
+@Produces({MediaType.APPLICATION_JSON})
+@SecurityRequirement(name = "bearerAuth")
+@RoleSecured({Role.USER, Role.MODERATOR, Role.ADMINISTRATOR})
+
 @Stateless
 public class UserResource {
     
