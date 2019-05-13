@@ -16,7 +16,8 @@
  */
 package rest;
 
-import io.swagger.annotations.Api;
+import domain.enums.Role;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.ejb.Stateless;
@@ -27,6 +28,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import rest.dto.HashTagDTO;
+import rest.utils.RoleSecured;
 import service.HashTagService;
 
 /**
@@ -34,7 +36,7 @@ import service.HashTagService;
  * @author Yannick
  */
 @Path("hashtags")
-@Api
+@SecurityRequirement(name = "bearerAuth")
 @Stateless
 public class HashTagResource {
     
@@ -43,6 +45,7 @@ public class HashTagResource {
 
     @GET
     @Produces({MediaType.APPLICATION_JSON})
+    @RoleSecured({Role.USER, Role.MODERATOR, Role.ADMINISTRATOR})
     public Response getHashTags() {
         List<HashTagDTO> hashTagDTO = hashTagService.getHashTags().stream()
                 .map(HashTagDTO::new)

@@ -45,6 +45,10 @@ public class UserService {
     public User findByName(String name) {
         return this.userDao.findByName(name);
     }
+    
+    public User findByJWT(String jwtToken) {
+        return this.userDao.findByJWT(jwtToken);
+    }
 
     public List<User> getUsers() {
         return this.userDao.getUsers();

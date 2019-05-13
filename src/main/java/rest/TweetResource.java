@@ -18,7 +18,7 @@ package rest;
 
 import domain.Tweet;
 import domain.enums.Role;
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.ejb.Stateless;
@@ -40,7 +40,7 @@ import service.TweetService;
  * @author Yannick
  */
 @Path("tweets")
-@Api
+@SecurityRequirement(name = "bearerAuth")
 @Stateless
 public class TweetResource {
     
@@ -49,6 +49,7 @@ public class TweetResource {
     
     @GET
     @Produces({MediaType.APPLICATION_JSON})
+    @RoleSecured({Role.USER, Role.MODERATOR, Role.ADMINISTRATOR})
     public Response getTweets() {
         List<TweetDTO> tweetDTO = tweetService.getTweets().stream()
                 .map(TweetDTO::new)

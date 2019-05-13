@@ -56,7 +56,15 @@ public interface UserDao {
      * @return Return the identified {@link User}
      */
     User findByName(String name);
-
+    
+     /**
+     * Get a user by JWT
+     *
+     * @param jwtToken JWT token to identify the {@Link User} by
+     * @return Return the identified {@link User}
+     */
+    User findByJWT(String jwtToken);
+    
     /**
      * Get all the existing users
      * 

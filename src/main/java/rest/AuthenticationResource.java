@@ -17,7 +17,6 @@
 package rest;
 
 import common.exceptions.InvalidCredentialsException;
-import io.swagger.annotations.Api;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -33,7 +32,6 @@ import javax.ws.rs.core.UriInfo;
 import rest.dto.auth.AccountCreateDTO;
 import rest.dto.auth.AccountResponseDTO;
 import service.AuthenticationService;
-import service.UserService;
 
 
 /**
@@ -41,7 +39,6 @@ import service.UserService;
  * @author Yannick
  */
 @Path("auth")
-@Api
 @Produces({MediaType.APPLICATION_JSON})
 @Stateless
 public class AuthenticationResource {
@@ -52,11 +49,9 @@ public class AuthenticationResource {
     @Inject
     private AuthenticationService authService;
     
-    @Inject
-    private UserService userService;
-    
     @POST
     @Path("register")
+    @Consumes(MediaType.APPLICATION_JSON)
     public Response register(AccountCreateDTO dto) {
         AccountResponseDTO createdDTO = this.authService.register(dto);
 
@@ -71,10 +66,10 @@ public class AuthenticationResource {
     @Path("login")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     public Response login(
-            @FormParam("username") String username,
+            @FormParam("name") String name,
             @FormParam("password") String password
     ) throws InvalidCredentialsException {
-        return Response.ok(this.authService.login(username, password)).build();
+        return Response.ok(this.authService.login(name, password)).build();
     }
 
 }

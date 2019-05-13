@@ -34,13 +34,13 @@ import rest.dto.auth.AccountResponseDTO;
  */
 @Stateless
 public class AuthenticationService {
-    
-    @Inject 
+
+    @Inject
     private UserService userService;
-    
+
     @Inject
     private JWTService jwtService;
-    
+
     /**
      * Generate a new JWT
      *
@@ -68,17 +68,22 @@ public class AuthenticationService {
      * @return The DTO containing the email address.
      */
     public AccountResponseDTO register(AccountCreateDTO dto) {
-       User newUser = new User(dto.getName(), dto.getPassword(), dto.getLanguage());
-       
-       this.userService.addUser(newUser);
-       return new AccountResponseDTO(newUser);
+        User newUser = new User(dto.getName(), dto.getPassword(), dto.getLanguage());
+        
+        JWT generatedJwt = generateJWT();
+        this.jwtService.create(generatedJwt);
+
+        newUser.setJwt(generatedJwt);
+        this.userService.addUser(newUser);
+
+        return new AccountResponseDTO(newUser);
     }
 
     /**
      * Login using credentials.
      *
      * @param name The username.
-     * @param password     The password.
+     * @param password The password.
      * @return The corresponding Account.
      */
     public AccountResponseDTO login(String name, String password) throws InvalidCredentialsException {
@@ -92,16 +97,17 @@ public class AuthenticationService {
 
         boolean hasToken = jwt != null;
         boolean isTokenExpired = hasToken && jwt.getExpiryDate().isBefore(Instant.now());
-
+        
         // Check if a token already exists and if it has expired. If it has, remove it
         if (hasToken) {
             if (!isTokenExpired) {
+                System.out.println(entity);
                 return new AccountResponseDTO(entity);
             }
-
+             
             this.jwtService.remove(jwt);
         }
-        
+
         //Generate new token
         JWT generatedJwt = generateJWT();
         this.jwtService.create(generatedJwt);

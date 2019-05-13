@@ -22,24 +22,30 @@
         <swagger-ui.version>3.20.9</swagger-ui.version>
     </properties>  
     <dependencies>
-        <!-- Rest API -->
+        
+      <!-- Swagger -->
+        <!-- https://mvnrepository.com/artifact/io.swagger.core.v3/swagger-jaxrs2 -->
         <dependency>
-            <groupId>io.swagger</groupId>
-            <artifactId>swagger-jaxrs</artifactId>
-            <version>1.5.13</version>
+            <groupId>io.swagger.core.v3</groupId>
+            <artifactId>swagger-jaxrs2</artifactId>
+            <version>2.0.7</version>
         </dependency>
-        <dependency>
-            <groupId>io.swagger</groupId>
-            <artifactId>swagger-annotations</artifactId>
-            <version>1.5.13</version>
-        </dependency>
-        <!-- Display endpoints with swagger -->
+        <!-- Swagger; This automagically scans for rest end-points -->
         <!-- https://mvnrepository.com/artifact/io.swagger.core.v3/swagger-jaxrs2-servlet-initializer -->
         <dependency>
             <groupId>io.swagger.core.v3</groupId>
             <artifactId>swagger-jaxrs2-servlet-initializer</artifactId>
             <version>2.0.7</version>
         </dependency>
+        <!-- Swagger; With these annotations you can add more documentation -->
+        <!-- https://mvnrepository.com/artifact/io.swagger.core.v3/swagger-annotations -->
+        <dependency>
+            <groupId>io.swagger.core.v3</groupId>
+            <artifactId>swagger-annotations</artifactId>
+            <version>2.0.7</version>
+        </dependency>
+
+        
         <!-- JSON Webtokens -->
         <!-- https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt -->
         <dependency>
@@ -47,12 +53,8 @@
             <artifactId>jjwt</artifactId>
             <version>0.9.1</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/io.swagger.core.v3/swagger-jaxrs2 -->
-        <dependency>
-            <groupId>io.swagger.core.v3</groupId>
-            <artifactId>swagger-jaxrs2</artifactId>
-            <version>2.0.7</version>
-        </dependency>
+        
+     
         <!-- Getter setters -->
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -148,7 +150,7 @@
                                 <goals>
                                     <goal>integration-test</goal>
                                     <goal>verify</goal>
-                                 </goals>
+                                </goals>
                             </execution>
                         </executions>
                     </plugin>
@@ -193,7 +195,7 @@
                     </execution>
                 </executions>
             </plugin>
-               <plugin>
+            <plugin>
                 <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-war-plugin -->
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
@@ -239,7 +241,7 @@
                 <version>1.5.3</version>
                 <executions>
                     <execution>
-                          <id>swagger-ui</id>
+                        <id>swagger-ui</id>
                         <phase>prepare-package</phase>
                         <goals>
                             <goal>replace</goal>

@@ -20,7 +20,6 @@ import common.exceptions.UniqueConstraintViolationException;
 import domain.Tweet;
 import domain.User;
 import domain.enums.Role;
-import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import java.net.URI;
 import java.util.List;
@@ -49,7 +48,6 @@ import service.UserService;
  * @author Yannick
  */
 @Path("users")
-@Api
 
 @Produces({MediaType.APPLICATION_JSON})
 @SecurityRequirement(name = "bearerAuth")

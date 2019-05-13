@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2019 Yannick
  *
  * This program is free software: you can redistribute it and/or modify
@@ -14,22 +14,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package config;
-
-import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
-import io.swagger.v3.oas.annotations.security.SecurityScheme;
-import javax.ws.rs.ApplicationPath;
-import javax.ws.rs.core.Application;
+package common.exceptions;
 
 /**
- * Configures a JAX-RS endpoint. Delete this class, if you are not exposing
- * JAX-RS resources in your application."
  *
- * @author airhacks.com
+ * @author Yannick
  */
-@SecurityScheme(name = "bearerAuth", type = SecuritySchemeType.HTTP, scheme = "bearer", bearerFormat = "JWT")
+public class InvalidTokenException extends Exception {
 
-@ApplicationPath("api")
-public class JAXRSConfiguration extends Application {
+    private static final String MESSAGE = "Invalid token";
+
+    public InvalidTokenException() {
+        super(MESSAGE);
+    }
 }
-

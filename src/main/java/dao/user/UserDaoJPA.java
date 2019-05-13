@@ -28,23 +28,27 @@ import javax.enterprise.inject.Default;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import javax.validation.ConstraintViolationException;
 
 /**
  *
  * @author Yannick
  */
-@Stateless @Default
+@Stateless
+@Default
 public class UserDaoJPA implements UserDao {
 
     @PersistenceContext
     private EntityManager em;
-    
+
     @PostConstruct
     public void init() {
         System.out.println("---UserDaoJPA Initialized");
     }
-    
+
     @Override
     public void addUser(User user) throws UniqueConstraintViolationException {
         try {
@@ -56,7 +60,7 @@ public class UserDaoJPA implements UserDao {
             }
             if (t instanceof ConstraintViolationException) {
                 throw new UniqueConstraintViolationException("User name must be unique", ex);
-            }    
+            }
         }
     }
 
@@ -64,27 +68,26 @@ public class UserDaoJPA implements UserDao {
     public void follow(User follower, User user) {
         user.addFollower(follower);
         this.editUser(user);
-        
+
         follower.addFollowing(user);
         this.editUser(follower);
     }
-    
-    
+
     @Override
     public void unfollow(User unfollower, User user) {
         user.removeFollower(unfollower);
         this.editUser(user);
-        
+
         unfollower.removeFollowing(user);
         this.editUser(unfollower);
     }
-    
+
     @Override
     public void setUserRole(User user, Role role) {
         user.setRole(role);
-        this.editUser(user);        
+        this.editUser(user);
     }
-    
+
     @Override
     public void editUser(User newUser) {
         this.em.merge(newUser);
@@ -94,27 +97,40 @@ public class UserDaoJPA implements UserDao {
     public User getUser(String uuid) {
         TypedQuery<User> query = this.em.createNamedQuery("user.findByUuid", User.class);
         query.setParameter("uuid", uuid);
-        
-        return JPAResultHelper.getSingleResult(query);
-    }
-    
-    @Override
-    public User findByName(String name) {
-        TypedQuery<User> query = this.em.createNamedQuery("user.findByName", User.class);
-        query.setParameter("name", name);
-        
+
         return JPAResultHelper.getSingleResult(query);
     }
 
     @Override
+    public User findByName(String name) {
+        TypedQuery<User> query = this.em.createNamedQuery("user.findByName", User.class);
+        query.setParameter("name", name);
+
+        return JPAResultHelper.getSingleResult(query);
+    }
+    
+    @Override
+    public User findByJWT(String jwtToken) {
+        CriteriaBuilder builder = this.em.getCriteriaBuilder();
+
+        CriteriaQuery<User> criteriaQuery = builder.createQuery(User.class);
+        Root<User> userRoot = criteriaQuery.from(User.class);
+
+        TypedQuery<User> query = this.em.createQuery(criteriaQuery
+                .select(userRoot)
+                .where(builder.equal(userRoot.join("jwt").get("token"), jwtToken)));
+        
+        return JPAResultHelper.getSingleResult(query);
+    }
+    @Override
     public List<User> getUsers() {
         TypedQuery<User> query = this.em.createNamedQuery("user.getUsers", User.class);
         return query.getResultList();
-    }    
-    
+    }
+
     /**
      * Set the entity manager of UserDaoJPA
-     * 
+     *
      * @param em The entity manager to be set
      */
     public void setEm(EntityManager em) {
