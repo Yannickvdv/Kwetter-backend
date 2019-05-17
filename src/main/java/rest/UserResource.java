@@ -20,6 +20,7 @@ import common.exceptions.UniqueConstraintViolationException;
 import domain.Tweet;
 import domain.User;
 import domain.enums.Role;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import java.net.URI;
 import java.util.List;
@@ -55,80 +56,100 @@ import service.UserService;
 
 @Stateless
 public class UserResource {
-    
+
     @Inject
     private UserService userService;
-    
+
     @Inject
     private KwetterService tweetService;
-    
+
     @GET
+    @Operation
     public Response getUsers() {
         List<User> users = this.userService.getUsers();
-        
+
         List<UserDTO> usersDTO = users.stream()
                 .map(UserDTO::new)
                 .collect(Collectors.toList());
         return Response.ok(usersDTO).build();
     }
-    
+
     @GET
     @Path("{id}")
+    @Operation
     public Response getUser(@PathParam("id") String uuid) {
         User user = userService.getUser(uuid);
         if (user == null) {
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
-        
+
         UserDTO userDTO = new UserDTO(user, true);
         return Response.ok(userDTO).build();
     }
-    
+
+    @GET
+    @Path("find/{username}")
+    @Operation
+    public Response getUserByName(@PathParam("username") String username) {
+        User user = this.userService.findByName(username);
+        if (user == null) {
+            throw new WebApplicationException(Response.Status.NOT_FOUND);
+        }
+
+        UserDTO userDTO = new UserDTO(user, true);
+        return Response.ok(userDTO).build();
+    }
+
     @PUT
     @Path("{id}")
     @Consumes(MediaType.APPLICATION_JSON)
+    @Operation
     public Response editUser(User user) {
-        if(user == null) {
+        if (user == null) {
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
         userService.editUser(user);
         URI id = URI.create(user.getUuid());
         return Response.created(id).build();
     }
-    
+
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
+    @Operation
     public Response addUser(User user) {
-        if(user == null) {
+        if (user == null) {
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
         try {
-            userService.addUser(user);            
+            userService.addUser(user);
             URI id = URI.create(user.getUuid());
             return Response.created(id).build();
-        } catch (UniqueConstraintViolationException ex ) {
+        } catch (UniqueConstraintViolationException ex) {
             return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
         }
     }
-    
+
     @GET
     @Path("{uuid}/tweets")
     @Produces(MediaType.APPLICATION_JSON)
+    @Operation
     public Response getUserTweets(@PathParam("uuid") String uuid) {
         User user = userService.getUser(uuid);
         List<TweetDTO> tweetDTO = user.getTweets().stream()
                 .map(TweetDTO::new)
                 .collect(Collectors.toList());
-        
-        GenericEntity tweets = new GenericEntity<List<TweetDTO>>(tweetDTO) {};
+
+        GenericEntity tweets = new GenericEntity<List<TweetDTO>>(tweetDTO) {
+        };
         return Response.ok(tweets).build();
     }
-    
+
     @POST
     @Path("{uuid}/tweets")
     @Produces(MediaType.APPLICATION_JSON)
+    @Operation
     public Response sendTweet(Tweet tweet) {
-        if(tweet == null) {
+        if (tweet == null) {
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
         tweetService.tweet(tweet);
