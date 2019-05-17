@@ -20,6 +20,7 @@ import common.exceptions.UniqueConstraintViolationException;
 import domain.Tweet;
 import domain.User;
 import domain.enums.Language;
+import java.util.ArrayList;
 import javax.annotation.PostConstruct;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
@@ -46,8 +47,8 @@ public class StartUp {
     
     @PostConstruct
     private void initData() {
-        User user1 = new User("Bart", "Eindhoven", Language.English);
-        User user2 = new User("Henk", "New York", Language.Dutch);
+        User user1 = new User("Bart", "test", Language.English);
+        User user2 = new User("Henk", "test", Language.Dutch);
         
         try {
             userService.addUser(user1);
@@ -58,12 +59,23 @@ public class StartUp {
         
         userService.follow(user2, user1);
         
-        for(int i = 0; i < 100; i++) {
-            Tweet tweet = new Tweet(
-                    "Test #" + i,
-                    i > 50 ? user1 : user2
-            );
-            kwetterService.tweet(tweet);
-        }  
+        ArrayList<Tweet> tweets = new ArrayList<Tweet>();
+        tweets.add(new Tweet("Hey here is a cool new tweet", user1));
+        tweets.add(new Tweet("Here is another one", user1));
+        tweets.add(new Tweet("I Love #bread", user1));
+        tweets.add(new Tweet("I Love #bread so much", user1));
+        tweets.add(new Tweet("Let me tell you about #bread", user1));
+        tweets.add(new Tweet("It's much better than #rice", user1));
+        //tweets.add(new Tweet("#bread is obviously the superior #grain", user1));
+        
+        tweets.add(new Tweet("To the buttface @Bart that keeps saying #bread is the best, you are obviously wrong.", user2));
+        tweets.add(new Tweet("#cereal is vastly superior", user2));
+        tweets.add(new Tweet("#cereal helps with dehydration and starvation.", user2));
+        tweets.add(new Tweet("And it comes with cool colory boxes", user2));
+        tweets.add(new Tweet("Just to annoy you; I'm gonna tag you a few times @Bart", user2));
+        tweets.add(new Tweet("@bart", user2));
+        tweets.add(new Tweet("@Bart", user2));
+        
+        tweets.forEach((tweet) -> kwetterService.tweet(tweet));
     }
 }
