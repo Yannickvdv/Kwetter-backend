@@ -71,5 +71,14 @@ public class AuthenticationResource {
     ) throws InvalidCredentialsException {
         return Response.ok(this.authService.login(name, password)).build();
     }
+    
+    @POST
+    @Path("refresh")
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    public Response refresh(
+            @FormParam("token") String token
+    ) throws InvalidCredentialsException {
+        return Response.ok(this.authService.refresh(token)).build();
+    }
 
 }

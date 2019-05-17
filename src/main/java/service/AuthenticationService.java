@@ -101,7 +101,6 @@ public class AuthenticationService {
         // Check if a token already exists and if it has expired. If it has, remove it
         if (hasToken) {
             if (!isTokenExpired) {
-                System.out.println(entity);
                 return new AccountResponseDTO(entity);
             }
              
@@ -118,4 +117,37 @@ public class AuthenticationService {
         User updatedEntity = this.userService.getUser(entity.getUuid());
         return new AccountResponseDTO(updatedEntity);
     }
+    
+    /**
+     * Refresh the token.
+     *
+     * @param token The token.
+     * @return The corresponding Account.
+     */
+    public AccountResponseDTO refresh(String token) throws InvalidCredentialsException {
+        User entity = this.userService.findByJWT(token);
+
+        if (entity == null) {
+            throw new InvalidCredentialsException();
+        }
+
+        JWT jwt = entity.getJwt();
+
+        boolean hasToken = jwt != null;
+        
+        // Check if a token already exists and remove it
+        if (hasToken) {
+            this.jwtService.remove(jwt);
+        }
+
+        //Generate new token
+        JWT generatedJwt = generateJWT();
+        this.jwtService.create(generatedJwt);
+        entity.setJwt(generatedJwt);
+
+        //Edit user and return user data
+        this.userService.editUser(entity);
+        User updatedEntity = this.userService.getUser(entity.getUuid());
+        return new AccountResponseDTO(updatedEntity);
+    }    
 }
