@@ -16,54 +16,60 @@
  */
 package dao.hashtag;
 
+import dao.helpers.JPAResultHelper;
 import domain.HashTag;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.enterprise.inject.Default;
-import javax.persistence.*;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 /**
  *
  * @author Yannick
  */
-@Stateless @Default
-public class HashTagDaoJPA implements HashTagDao{
-    
+@Stateless
+@Default
+public class HashTagDaoJPA implements HashTagDao {
+
     @PersistenceContext
     private EntityManager em;
-    
+
     @PostConstruct
     public void init() {
         System.out.println("---HashTagDaoJPA Initialized");
     }
-    
+
     @Override
     public List<HashTag> getHashTags() {
-       Query query = em.createNamedQuery("hashTag.getHashTags", HashTag.class);
-       return new ArrayList<>(query.getResultList());
+        return this.em.createNamedQuery("HashTag.getHashTags", HashTag.class)
+            .getResultStream().collect(Collectors.toList());
+
     }
 
     @Override
     public HashTag findByName(String name) {
-        TypedQuery<HashTag> query = em.createNamedQuery("hashTag.findByName", HashTag.class);
-        query.setParameter("name", name);
-        List<HashTag> result = query.getResultList();
-        return result.get(0);
+        return (HashTag) JPAResultHelper.getSingleResult(
+                this.em.createNamedQuery("hashTag.findByName", HashTag.class)
+                        .setParameter("name", name));
+
     }
 
     @Override
     public void addHashTag(HashTag hashTag) {
+        System.out.println(hashTag);
         em.persist(hashTag);
     }
-    
-    public int amount () {
+
+    public int amount() {
         return getHashTags().size();
     }
-    
+
     /**
      * Set the entity manager of HashTagDaoJPA
-     * 
+     *
      * @param em The entity manager to be set
      */
     public void setEm(EntityManager em) {

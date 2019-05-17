@@ -34,7 +34,6 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import lombok.Getter;
 import org.hibernate.annotations.GenericGenerator;
-
 /**
  *
  * @author Yannick
@@ -43,7 +42,7 @@ import org.hibernate.annotations.GenericGenerator;
 @Table(name = "hashtags")
 @NamedQueries({
     @NamedQuery(name = "hashTag.getHashTags", query = "SELECT h FROM HashTag h"),
-    @NamedQuery(name = "hashTag.findByName", query = "SELECT h FROM HashTag h WHERE h.text = :text")})
+    @NamedQuery(name = "hashTag.findByName", query = "SELECT h FROM HashTag h WHERE h.text = :name")})
 public class HashTag implements Serializable {
     
     @Getter

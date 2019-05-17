@@ -64,18 +64,21 @@ public class StartUp {
         tweets.add(new Tweet("Here is another one", user1));
         tweets.add(new Tweet("I Love #bread", user1));
         tweets.add(new Tweet("I Love #bread so much", user1));
-        tweets.add(new Tweet("Let me tell you about #bread", user1));
-        tweets.add(new Tweet("It's much better than #rice", user1));
-        //tweets.add(new Tweet("#bread is obviously the superior #grain", user1));
-        
-        tweets.add(new Tweet("To the buttface @Bart that keeps saying #bread is the best, you are obviously wrong.", user2));
-        tweets.add(new Tweet("#cereal is vastly superior", user2));
-        tweets.add(new Tweet("#cereal helps with dehydration and starvation.", user2));
-        tweets.add(new Tweet("And it comes with cool colory boxes", user2));
-        tweets.add(new Tweet("Just to annoy you; I'm gonna tag you a few times @Bart", user2));
-        tweets.add(new Tweet("@bart", user2));
-        tweets.add(new Tweet("@Bart", user2));
-        
-        tweets.forEach((tweet) -> kwetterService.tweet(tweet));
+//        tweets.add(new Tweet("Let me tell you about #bread", user1));
+//        tweets.add(new Tweet("It's much better than #rice", user1));
+//        tweets.add(new Tweet("#bread is obviously the superior #grain", user1));
+//        
+//        tweets.add(new Tweet("To the buttface @Bart that keeps saying #bread is the best, you are obviously wrong.", user2));
+//        tweets.add(new Tweet("#cereal is vastly superior", user2));
+//        tweets.add(new Tweet("#cereal helps with dehydration and starvation.", user2));
+//        tweets.add(new Tweet("And it comes with cool colory boxes", user2));
+//        tweets.add(new Tweet("Just to annoy you; I'm gonna tag you a few times @Bart", user2));
+//        tweets.add(new Tweet("@bart", user2));
+//        tweets.add(new Tweet("@Bart", user2));
+        try{
+            tweets.forEach((tweet) -> kwetterService.tweet(tweet));
+        } catch (Error er) {
+            System.out.println(er);
+        }
     }
 }

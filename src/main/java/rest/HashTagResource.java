@@ -48,7 +48,7 @@ public class HashTagResource {
     @RoleSecured({Role.USER, Role.MODERATOR, Role.ADMINISTRATOR})
     public Response getHashTags() {
         List<HashTagDTO> hashTagDTO = hashTagService.getHashTags().stream()
-                .map(HashTagDTO::new)
+                .map((hashTag) -> new HashTagDTO(hashTag, true))
                 .collect(Collectors.toList());
         return Response.ok(hashTagDTO).build();
     }

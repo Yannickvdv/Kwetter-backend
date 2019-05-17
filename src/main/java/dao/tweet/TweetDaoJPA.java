@@ -55,6 +55,7 @@ public class TweetDaoJPA implements TweetDao {
 
     @Override
     public void addTweet(Tweet tweet) {
+        System.out.println(tweet);
         this.em.persist(tweet);
     }
 
