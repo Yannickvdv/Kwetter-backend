@@ -67,7 +67,6 @@ public class KwetterService {
                 HashTag newHashTag = new HashTag(s, tweet);
                 this.hashTagService.addHashTag(newHashTag);
             }
-                
         });   
     }
 }

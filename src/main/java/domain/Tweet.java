@@ -112,6 +112,19 @@ public class Tweet implements Serializable {
         }
     }
     
+    /**
+     * Add a {@link HashTag} to this {@link Kweet}
+     *
+     * @param hashTag The {@link HashTag} to add
+     */
+    void addHashTag(HashTag hashTag) {
+        if (!this.hashTags.contains(hashTag)) {
+            this.hashTags.add(hashTag);
+            hashTag.addTweet(this);
+        }
+    }
+
+    
 //    public int getLikesCount() {
 //        return this.likes.size();
 //    }

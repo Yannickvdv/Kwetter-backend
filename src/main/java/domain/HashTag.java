@@ -17,9 +17,9 @@
 package domain;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -42,7 +42,8 @@ import org.hibernate.annotations.GenericGenerator;
 @Table(name = "hashtags")
 @NamedQueries({
     @NamedQuery(name = "hashTag.getHashTags", query = "SELECT h FROM HashTag h"),
-    @NamedQuery(name = "hashTag.findByName", query = "SELECT h FROM HashTag h WHERE h.text = :name")})
+    @NamedQuery(name = "hashTag.findByName", query = "SELECT h FROM HashTag h WHERE h.text = :name"),
+    @NamedQuery(name = "hashTag.findTrends", query = "SELECT h.text, COUNT(h.tweets) AS amount_of_tweets FROM HashTag h")})
 public class HashTag implements Serializable {
     
     @Getter
@@ -60,16 +61,16 @@ public class HashTag implements Serializable {
     @JoinTable(name = "hashtag_has_tweets",
             joinColumns = @JoinColumn(name = "hashtag_uuid", referencedColumnName = "uuid"),
             inverseJoinColumns = @JoinColumn(name = "tweet_uuid", referencedColumnName = "uuid"))
-    private List<Tweet> tweets;
+    private Set<Tweet> tweets;
 
     public HashTag(){
         this.text = "";
-        this.tweets = new ArrayList<>();
+        this.tweets = new HashSet<>();
     }
     
     public HashTag(String text, Tweet tweet){
         this.text = text;
-        this.tweets = Arrays.asList(tweet);
+        this.tweets = new HashSet<>(Arrays.asList(tweet));
     }
     
     
@@ -81,6 +82,7 @@ public class HashTag implements Serializable {
     public void addTweet(Tweet tweet) {
         if(!this.tweets.contains(tweet)){
             this.tweets.add(tweet);
+            tweet.addHashTag(this);
         }
     }
 }

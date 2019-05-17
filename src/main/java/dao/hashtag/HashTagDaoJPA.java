@@ -46,7 +46,6 @@ public class HashTagDaoJPA implements HashTagDao {
     public List<HashTag> getHashTags() {
         return this.em.createNamedQuery("HashTag.getHashTags", HashTag.class)
             .getResultStream().collect(Collectors.toList());
-
     }
 
     @Override
@@ -54,12 +53,10 @@ public class HashTagDaoJPA implements HashTagDao {
         return (HashTag) JPAResultHelper.getSingleResult(
                 this.em.createNamedQuery("hashTag.findByName", HashTag.class)
                         .setParameter("name", name));
-
     }
 
     @Override
     public void addHashTag(HashTag hashTag) {
-        System.out.println(hashTag);
         em.persist(hashTag);
     }
 
