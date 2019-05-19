@@ -16,6 +16,10 @@
  */
 package rest;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import common.exceptions.UniqueConstraintViolationException;
 import domain.Tweet;
 import domain.User;
@@ -35,9 +39,11 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 import rest.dto.TweetDTO;
 import rest.dto.UserDTO;
 import rest.utils.RoleSecured;
@@ -56,6 +62,9 @@ import service.UserService;
 
 @Stateless
 public class UserResource {
+
+    @Context
+    private UriInfo uriInfo;
 
     @Inject
     private UserService userService;
@@ -146,14 +155,31 @@ public class UserResource {
 
     @POST
     @Path("{uuid}/tweets")
-    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
     @Operation
-    public Response sendTweet(Tweet tweet) {
-        if (tweet == null) {
+    public Response sendTweet(String body) {
+        JsonObject jsonBody = new JsonParser().parse(body).getAsJsonObject();
+      
+        
+        JsonElement jsonUser = jsonBody.get("user");
+        Gson gson = new Gson();
+        User user = gson.fromJson(jsonUser, User.class);
+        
+        if (user == null) {
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
-        tweetService.tweet(tweet);
-        URI id = URI.create(tweet.getUser().getUuid());
-        return Response.created(id).build();
+
+        User poster = userService.getUser(user.getUuid());
+
+        if (poster == null) {
+            throw new WebApplicationException(Response.Status.NOT_FOUND);
+        }
+
+        Tweet tweet = new Tweet(jsonBody.get("text").getAsString(), poster);
+        this.tweetService.tweet(tweet);
+
+        // NOTE: Auto generated fields cannot be returned this way
+        TweetDTO kweetDTO = new TweetDTO(tweet);
+        return Response.created(this.uriInfo.getAbsolutePathBuilder().path(kweetDTO.getUuid()).build()).entity(kweetDTO).build();
     }
 }
