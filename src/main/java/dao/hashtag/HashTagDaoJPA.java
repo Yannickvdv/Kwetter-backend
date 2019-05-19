@@ -44,7 +44,7 @@ public class HashTagDaoJPA implements HashTagDao {
 
     @Override
     public List<HashTag> getHashTags() {
-        return this.em.createNamedQuery("HashTag.getHashTags", HashTag.class)
+        return this.em.createNamedQuery("hashTag.getHashTags", HashTag.class)
             .getResultStream().collect(Collectors.toList());
     }
 
@@ -54,6 +54,12 @@ public class HashTagDaoJPA implements HashTagDao {
                 this.em.createNamedQuery("hashTag.findByName", HashTag.class)
                         .setParameter("name", name));
     }
+    
+//    @Override
+//    public Set<String, int>  findTrends(String name) {
+//        return this.em.createNamedQuery("hashTag.findTrends", HashTag.class)
+//                .getResultStream().collect(Collectors.toList());
+//    }
 
     @Override
     public void addHashTag(HashTag hashTag) {
