@@ -47,19 +47,32 @@ public class StartUp {
 
     @PostConstruct
     private void initData() {
-        User user1 = new User("Bart", "test", Language.English);
-        User user2 = new User("Henk", "test", Language.Dutch);
 
-        try {
-            userService.addUser(user1);
-            userService.addUser(user2);
-        } catch (UniqueConstraintViolationException ex) {
-            System.out.println(ex);
+        User user1 = (new User("Bart", "test", Language.English));
+        User user2 = new User("Henk", "test", Language.Dutch);
+        User user3 = new User("Harry", "test", Language.English);
+        User user4 = new User("Adrian", "test", Language.Dutch);
+        User user5 = new User("Vertigo", "test", Language.English);
+        User user6 = new User("Barry", "test", Language.Dutch);
+        User user7 = new User("Hendrik", "test", Language.English);
+        User user8 = new User("Vatus", "test", Language.Dutch);
+        User[] users = {user1, user2, user3, user4, user5, user6, user7, user8};
+
+        for (int i = 0; i < users.length; i++) {
+            User user = users[i];
+            try {
+                userService.addUser(user);
+            } catch (UniqueConstraintViolationException ex) {
+                System.out.println(ex);
+            }
+            userService.follow(user, user6);
+            userService.follow(user, user7);
+            userService.follow(user, user8);
         }
 
         userService.follow(user2, user1);
 
-        ArrayList<Tweet> tweets = new ArrayList<Tweet>();
+        ArrayList<Tweet> tweets = new ArrayList<>();
         tweets.add(new Tweet("Hey here is a cool new tweet", user1));
         tweets.add(new Tweet("Here is another one", user1));
         tweets.add(new Tweet("I Love #bread", user1));
@@ -75,7 +88,7 @@ public class StartUp {
         tweets.add(new Tweet("Just to annoy you; I'm gonna tag you a few times @Bart", user2));
         tweets.add(new Tweet("@bart", user2));
         tweets.add(new Tweet("@Bart", user2));
-        
+
         tweets.forEach((tweet) -> kwetterService.tweet(tweet));
 
     }
