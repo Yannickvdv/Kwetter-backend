@@ -16,6 +16,7 @@
  */
 package rest;
 
+import domain.HashTag;
 import domain.enums.Role;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import java.util.List;
@@ -24,6 +25,7 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -50,6 +52,17 @@ public class HashTagResource {
         List<HashTagDTO> hashTagDTO = hashTagService.getHashTags().stream()
                 .map((hashTag) -> new HashTagDTO(hashTag, true))
                 .collect(Collectors.toList());
+        return Response.ok(hashTagDTO).build();
+    }
+    
+    @GET
+    @Path("{uuid}")
+    @Produces({MediaType.APPLICATION_JSON})
+    @RoleSecured({Role.USER, Role.MODERATOR, Role.ADMINISTRATOR})
+    public Response getHashTagsByName(@PathParam("uuid") String uuid) {
+        HashTag hashTag = hashTagService.findByName(uuid);
+        HashTagDTO hashTagDTO = new HashTagDTO(hashTag, true);
+        
         return Response.ok(hashTagDTO).build();
     }
 }
