@@ -55,6 +55,8 @@ import org.hibernate.annotations.LazyCollectionOption;
     @NamedQuery(name = "user.findByUuid", query = "SELECT u FROM User u WHERE u.uuid = :uuid"),
     @NamedQuery(name = "user.findByName", query = "SELECT u FROM User u WHERE u.name = :name"),
     @NamedQuery(name = "user.getUsers", query = "SELECT u FROM User u")})
+//    @NamedQuery(name = "user.getTimeline", query = "SELECT u.tweets FROM User u WHERE u.name = :name "
+//            + "INNER JOIN u.following f")})
 public class User implements Serializable {
     
     @Setter(AccessLevel.NONE)
