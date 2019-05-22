@@ -16,8 +16,6 @@
  */
 package rest;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import common.exceptions.UniqueConstraintViolationException;
@@ -159,17 +157,15 @@ public class UserResource {
     @Operation
     public Response sendTweet(String body) {
         JsonObject jsonBody = new JsonParser().parse(body).getAsJsonObject();
+            
+        JsonObject jsonUser = jsonBody.getAsJsonObject("user");
+        String userUuid = jsonUser.get("uuid").getAsString();
       
-        
-        JsonElement jsonUser = jsonBody.get("user");
-        Gson gson = new Gson();
-        User user = gson.fromJson(jsonUser, User.class);
-        
-        if (user == null) {
+        if (userUuid == null) {
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
 
-        User poster = userService.getUser(user.getUuid());
+        User poster = userService.getUser(userUuid);
 
         if (poster == null) {
             throw new WebApplicationException(Response.Status.NOT_FOUND);

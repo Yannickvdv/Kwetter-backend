@@ -66,7 +66,7 @@ public class AuthenticationResource {
     @Path("login")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     public Response login(
-            @FormParam("name") String name,
+            @FormParam("username") String name,
             @FormParam("password") String password
     ) throws InvalidCredentialsException {
         return Response.ok(this.authService.login(name, password)).build();

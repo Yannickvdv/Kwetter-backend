@@ -88,7 +88,7 @@ public class AuthenticationService {
      */
     public AccountResponseDTO login(String name, String password) throws InvalidCredentialsException {
         User entity = this.userService.findByName(name);
-
+                
         if (entity == null || !entity.getPassword().equals(password)) {
             throw new InvalidCredentialsException();
         }
