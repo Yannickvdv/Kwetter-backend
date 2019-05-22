@@ -31,6 +31,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -101,22 +102,20 @@ public class User implements Serializable {
             joinColumns = @JoinColumn(name = "user_uuid", referencedColumnName = "uuid"),
             inverseJoinColumns = @JoinColumn(name = "tweet_uuid", referencedColumnName = "uuid"))
     private List<Tweet> mentions;
-    
+ 
     @Setter(AccessLevel.NONE)
+    @ManyToMany(mappedBy = "following")
     @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(cascade = CascadeType.REMOVE)
-    @JoinTable(name = "user_is_following",
-            joinColumns = @JoinColumn(name = "user_uuid", referencedColumnName = "uuid"),
-            inverseJoinColumns = @JoinColumn(name = "following_uuid", referencedColumnName = "uuid"))
-    private List<User> following; 
-    
+    private final List<User> followers;
+
     @Setter(AccessLevel.NONE)
+    @ManyToMany
     @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(cascade = CascadeType.REMOVE)
-    @JoinTable(name = "user_has_followers",
-            joinColumns = @JoinColumn(name = "user_uuid", referencedColumnName = "uuid"),
-            inverseJoinColumns = @JoinColumn(name = "follower_uuid", referencedColumnName = "uuid"))
-    private List<User> followers;
+    @JoinTable(name = "user_follows",
+               joinColumns = @JoinColumn(name = "followers_user", referencedColumnName = "uuid"),
+               inverseJoinColumns = @JoinColumn(name = "followers_follows", referencedColumnName = "uuid"))
+    private final List<User> following;
+
     
     @OneToOne
     private JWT jwt;

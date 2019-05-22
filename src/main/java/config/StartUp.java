@@ -47,8 +47,9 @@ public class StartUp {
 
     @PostConstruct
     private void initData() {
+        System.out.println("hi");
 
-        User user1 = (new User("Bart", "test", Language.English));
+        User user1 = new User("Bart", "test", Language.English);
         User user2 = new User("Henk", "test", Language.Dutch);
         User user3 = new User("Harry", "test", Language.English);
         User user4 = new User("Adrian", "test", Language.Dutch);
@@ -65,12 +66,17 @@ public class StartUp {
             } catch (UniqueConstraintViolationException ex) {
                 System.out.println(ex);
             }
-            userService.follow(user, user6);
-            userService.follow(user, user7);
-            userService.follow(user, user8);
         }
 
+        userService.follow(user1, user6);
+        userService.follow(user1, user7);
+        userService.follow(user1, user8);
+        userService.follow(user1, user2);
+        
         userService.follow(user2, user1);
+        userService.follow(user5, user1);
+        userService.follow(user4, user1);
+        userService.follow(user3, user1);
 
         ArrayList<Tweet> tweets = new ArrayList<>();
         tweets.add(new Tweet("Hey here is a cool new tweet", user1));
