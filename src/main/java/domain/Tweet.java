@@ -17,8 +17,8 @@
 package domain;
 
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -34,8 +34,6 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import lombok.Getter;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.LazyCollection;
@@ -64,8 +62,7 @@ public class Tweet implements Serializable {
     @JoinColumn(name = "user_uuid")
     private User user;
     
-    @Temporal(TemporalType.DATE)
-    private Date insertedAt;
+    private Instant insertedAt;
     
     @OneToMany(cascade = CascadeType.ALL, fetch=FetchType.EAGER)
     @JoinTable(name = "tweet_has_likes",
@@ -78,29 +75,33 @@ public class Tweet implements Serializable {
     private List<HashTag> hashTags;
     
     public Tweet() {
-        this.insertedAt = new Date();
+        this.insertedAt = Instant.now();
         this.likes = new ArrayList<>();
         this.hashTags = new ArrayList<>();
     }
     
     public Tweet(String text, User user){
         this.text = text;
-        this.insertedAt = new Date();
         this.user = user;
+        this.insertedAt = Instant.now();
         this.likes = new ArrayList<>();
         this.hashTags = new ArrayList<>();
         
-        this.user.tweet(this);
+        if (this.user != null)
+            this.user.tweet(this);
+
     }
       
-    public Tweet(String text, User user, Date insertedAt, List<User> likes, List<HashTag> hashTags){
+    public Tweet(String text, User user, Instant insertedAt, List<User> likes, List<HashTag> hashTags){
         this.text = text;
         this.insertedAt = insertedAt;
         this.user = user;
         this.likes = likes;
         this.hashTags = hashTags;
         
-        this.user.tweet(this);
+        if (this.user != null)
+            this.user.tweet(this);
+
     }
     
     public void like(User like)
@@ -117,7 +118,7 @@ public class Tweet implements Serializable {
      *
      * @param hashTag The {@link HashTag} to add
      */
-    void addHashTag(HashTag hashTag) {
+    public void addHashTag(HashTag hashTag) {
         if (!this.hashTags.contains(hashTag)) {
             this.hashTags.add(hashTag);
             hashTag.addTweet(this);

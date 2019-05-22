@@ -20,10 +20,8 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -34,6 +32,8 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import lombok.Getter;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 /**
  *
  * @author Yannick
@@ -56,12 +56,14 @@ public class HashTag implements Serializable {
     @Column(nullable = false, unique = true)
     private String text;
     
-    @Getter  
-    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL, CascadeType.MERGE})
+    @Getter
+    @ManyToMany
+    @LazyCollection(LazyCollectionOption.FALSE)
     @JoinTable(name = "hashtag_has_tweets",
-            joinColumns = @JoinColumn(name = "hashtag_uuid", referencedColumnName = "uuid"),
-            inverseJoinColumns = @JoinColumn(name = "tweet_uuid", referencedColumnName = "uuid"))
-    private Set<Tweet> tweets;
+               joinColumns = @JoinColumn(name = "hashtags_hashtag", referencedColumnName = "uuid"),
+               inverseJoinColumns = @JoinColumn(name = "hashtags_tweet", referencedColumnName = "uuid"))
+    private final Set<Tweet> tweets;
+
 
     public HashTag(){
         this.text = "";

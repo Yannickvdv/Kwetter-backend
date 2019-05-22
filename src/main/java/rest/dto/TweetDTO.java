@@ -17,7 +17,7 @@
 package rest.dto;
 
 import domain.Tweet;
-import java.util.Date;
+import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.Getter;
@@ -33,7 +33,7 @@ public class TweetDTO {
     private String uuid;
     private String text;
     private UserDTO user;
-    private Date insertedAt;
+    private Instant insertedAt;
     
     private List<UserDTO> likes;
     private List<HashTagDTO> hashTags;
