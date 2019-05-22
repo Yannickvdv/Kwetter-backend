@@ -48,7 +48,7 @@ public class KwetterService {
         // Tweet
         this.tweetService.addTweet(tweet);
 
-         // Add the mentions to the user
+        // Add the mentions to the user
         List<String> mentions = TextHelper.searchMentions(tweet.getText());
         mentions.forEach((String s) -> {
             User user = this.userService.findByName(s);
@@ -61,12 +61,12 @@ public class KwetterService {
         hashtags.forEach((String s) -> {
             HashTag hashTag = this.hashTagService.findByName(s);
             if (hashTag != null) {
-                 hashTag.addTweet(tweet);
+                hashTag.addTweet(tweet);
             }
             else {
                 HashTag newHashTag = new HashTag(s, tweet);
                 this.hashTagService.addHashTag(newHashTag);
             }
-        });   
+        });
     }
 }
