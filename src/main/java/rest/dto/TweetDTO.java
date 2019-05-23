@@ -1,4 +1,4 @@
-/*
+/* 
  * Copyright (C) 2019 Yannick
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,9 +17,11 @@
 package rest.dto;
 
 import domain.Tweet;
-import java.util.Date;
+import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.ws.rs.core.Link;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -27,34 +29,51 @@ import lombok.Setter;
  *
  * @author Yannick
  */
-@Getter @Setter
+@Getter
+@Setter
 public class TweetDTO {
-    
+
     private String uuid;
     private String text;
     private UserDTO user;
-    private Date insertedAt;
-    
+    private Instant insertedAt;
+
     private List<UserDTO> likes;
     private List<HashTagDTO> hashTags;
-    
+
+    private List<Link> links;
+
     public TweetDTO(Tweet tweet) {
         this.uuid = tweet.getUuid();
         this.text = tweet.getText();
         this.user = new UserDTO(tweet.getUser());
         this.insertedAt = tweet.getInsertedAt();
+
+        this.links = new ArrayList<>();
     }
-    
+
     public TweetDTO(Tweet tweet, boolean fat) {
         this(tweet);
-        
-        if(fat) {
-                this.likes = tweet.getLikes().stream()
+
+        if (fat) {
+            this.likes = tweet.getLikes().stream()
                     .map(UserDTO::new)
                     .collect(Collectors.toList());
-                this.hashTags = tweet.getHashTags().stream()
+            this.hashTags = tweet.getHashTags().stream()
                     .map(HashTagDTO::new)
                     .collect(Collectors.toList());
         }
+    }
+
+    public List<Link> getLinks() {
+        return links;
+    }
+
+    public void setLinks(List<Link> links) {
+        this.links = links;
+    }
+
+    public void addLink(Link link) {
+        this.links.add(link);
     }
 }

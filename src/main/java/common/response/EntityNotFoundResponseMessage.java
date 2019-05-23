@@ -14,25 +14,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package auth;
-
-import javax.ws.rs.container.ContainerRequestContext;
-import javax.ws.rs.container.ContainerResponseContext;
-import javax.ws.rs.container.ContainerResponseFilter;
-import javax.ws.rs.ext.Provider;
+package common.response;
+import static javax.ws.rs.core.Response.Status.NOT_FOUND;
 
 /**
  *
  * @author Yannick
  */
-@Provider
-public class CrossOriginResourceSharingFilter implements ContainerResponseFilter {
+public class EntityNotFoundResponseMessage extends ResponseMessage {
 
-    @Override
-    public void filter(ContainerRequestContext requestContext, ContainerResponseContext response) {
-        response.getHeaders().putSingle("Access-Control-Allow-Origin", "*");
-        response.getHeaders().putSingle("Access-Control-Allow-Methods", "OPTIONS, GET, POST, PUT, DELETE");
-        response.getHeaders().putSingle("Access-Control-Allow-Headers", "Content-Type");
+    public EntityNotFoundResponseMessage() {
+        super(NOT_FOUND, "Resource not found.");
     }
-    
+
+    public EntityNotFoundResponseMessage(String message) {
+        super(NOT_FOUND, String.format("Resource not found: %s", message));
+    }
+
+    public EntityNotFoundResponseMessage(String entityClassName, Object id) {
+        super(NOT_FOUND, String.format("%s with id %s not found.", entityClassName, id));
+    }
+
 }

@@ -1,10 +1,22 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/* 
+ * Copyright (C) 2019 Yannick
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package domain;
 
+import domain.auth.JWT;
 import domain.enums.Language;
 import domain.enums.Role;
 import java.io.Serializable;
@@ -19,9 +31,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -42,6 +56,8 @@ import org.hibernate.annotations.LazyCollectionOption;
     @NamedQuery(name = "user.findByUuid", query = "SELECT u FROM User u WHERE u.uuid = :uuid"),
     @NamedQuery(name = "user.findByName", query = "SELECT u FROM User u WHERE u.name = :name"),
     @NamedQuery(name = "user.getUsers", query = "SELECT u FROM User u")})
+//    @NamedQuery(name = "user.getTimeline", query = "SELECT u.tweets FROM User u WHERE u.name = :name "
+//            + "INNER JOIN u.following f")})
 public class User implements Serializable {
     
     @Setter(AccessLevel.NONE)
@@ -86,23 +102,24 @@ public class User implements Serializable {
             joinColumns = @JoinColumn(name = "user_uuid", referencedColumnName = "uuid"),
             inverseJoinColumns = @JoinColumn(name = "tweet_uuid", referencedColumnName = "uuid"))
     private List<Tweet> mentions;
-    
+ 
     @Setter(AccessLevel.NONE)
+    @ManyToMany(mappedBy = "following")
     @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(cascade = CascadeType.REMOVE)
-    @JoinTable(name = "user_is_following",
-            joinColumns = @JoinColumn(name = "user_uuid", referencedColumnName = "uuid"),
-            inverseJoinColumns = @JoinColumn(name = "following_uuid", referencedColumnName = "uuid"))
-    private List<User> following; 
-    
+    private final List<User> followers;
+
     @Setter(AccessLevel.NONE)
+    @ManyToMany
     @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(cascade = CascadeType.REMOVE)
-    @JoinTable(name = "user_has_followers",
-            joinColumns = @JoinColumn(name = "user_uuid", referencedColumnName = "uuid"),
-            inverseJoinColumns = @JoinColumn(name = "follower_uuid", referencedColumnName = "uuid"))
-    private List<User> followers;
+    @JoinTable(name = "user_follows",
+               joinColumns = @JoinColumn(name = "followers_user", referencedColumnName = "uuid"),
+               inverseJoinColumns = @JoinColumn(name = "followers_follows", referencedColumnName = "uuid"))
+    private final List<User> following;
+
     
+    @OneToOne
+    private JWT jwt;
+
      public User() {
         this("", "", Language.Dutch);
     }
