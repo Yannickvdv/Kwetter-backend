@@ -19,9 +19,15 @@ package service;
 import dao.tweet.TweetDao;
 import domain.Tweet;
 import domain.User;
+import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.ws.rs.core.Link;
+import javax.ws.rs.core.UriInfo;
+import rest.TweetResource;
+import rest.dto.TweetDTO;
 
 /**
  *
@@ -29,22 +35,22 @@ import javax.inject.Inject;
  */
 @Stateless
 public class TweetService {
-    
+
     @Inject
     private TweetDao tweetDAO;
-    
+
     public List<Tweet> getTweets() {
         return this.tweetDAO.getTweets();
     }
-    
+
     public Tweet getTweet(String id) {
         return this.tweetDAO.getTweet(id);
     }
-     
-    public void addTweet(Tweet tweet){
+
+    public void addTweet(Tweet tweet) {
         this.tweetDAO.addTweet(tweet);
     }
-    
+
     public void editTweet(Tweet tweet) {
         this.tweetDAO.editTweet(tweet);
     }
@@ -52,8 +58,40 @@ public class TweetService {
     public void remove(Tweet tweet) {
         this.tweetDAO.remove(tweet);
     }
-    
+
     public void like(Tweet tweet, User user) {
         this.tweetDAO.like(tweet, user);
+    }
+
+    public TweetDTO tweetToDTO(Tweet tweet) {
+        return new TweetDTO(tweet);
+    }
+
+    public List<TweetDTO> tweetsToDTOs(List<Tweet> tweets) {
+        List<TweetDTO> tweetDTOS = new ArrayList<>();
+        tweets.forEach(tweet -> {
+            tweetDTOS.add(new TweetDTO(tweet));
+        });
+
+        return tweetDTOS;
+    }
+
+    public TweetDTO addSelfLink(TweetDTO tweet, UriInfo uriInfo) {
+        URI selfUri = uriInfo.getBaseUriBuilder().path(TweetResource.class).path(TweetResource.class, "getTweet").build(tweet.getUuid());
+
+        Link.Builder linkBuilder = Link.fromUri(selfUri);
+        Link selfLink = linkBuilder.rel("self").build();
+
+        tweet.addLink(selfLink);
+
+        return tweet;
+    }
+
+    public List<TweetDTO> addSelfLinks(List<TweetDTO> tweetDTOS, UriInfo uriInfo) {
+        List<TweetDTO> tweetDTOSFinal = new ArrayList<>();
+        tweetDTOS.forEach(tweetDTO -> {
+            tweetDTOSFinal.add(addSelfLink(tweetDTO, uriInfo));
+        });
+        return tweetDTOSFinal;
     }
 }

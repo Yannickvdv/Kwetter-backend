@@ -18,8 +18,10 @@ package rest.dto;
 
 import domain.User;
 import domain.enums.Language;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.ws.rs.core.Link;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -27,9 +29,10 @@ import lombok.Setter;
  *
  * @author Yannick
  */
-@Getter @Setter
+@Getter
+@Setter
 public class UserDTO {
-    
+
     private String uuid;
     private String name;
     private String location;
@@ -37,11 +40,13 @@ public class UserDTO {
     private String website;
     private Language language;
     private String photo;
-    
+
     private List<TweetDTO> tweets;
     private List<TweetDTO> mentions;
     private List<UserDTO> following;
     private List<UserDTO> followers;
+    
+    private List<Link> links;
     
     public UserDTO(User user) {
         this.uuid = user.getUuid();
@@ -51,8 +56,10 @@ public class UserDTO {
         this.website = user.getWebsite();
         this.language = user.getLanguage();
         this.photo = user.getPhoto();
+        
+        this.links = new ArrayList<>();
     }
-    
+
     public UserDTO(User user, boolean fat) {
         this(user);
         if (fat) {
@@ -60,14 +67,26 @@ public class UserDTO {
                     .map(TweetDTO::new)
                     .collect(Collectors.toList());
             this.mentions = user.getMentions().stream()
-                      .map(TweetDTO::new)
-                      .collect(Collectors.toList());
+                    .map(TweetDTO::new)
+                    .collect(Collectors.toList());
             this.following = user.getFollowing().stream()
-                      .map(UserDTO::new)
-                      .collect(Collectors.toList());
+                    .map(UserDTO::new)
+                    .collect(Collectors.toList());
             this.followers = user.getFollowers().stream()
-                      .map(UserDTO::new)
-                      .collect(Collectors.toList());
+                    .map(UserDTO::new)
+                    .collect(Collectors.toList());
         }
+    }
+
+    public List<Link> getLinks() {
+        return links;
+    }
+
+    public void setLinks(List<Link> links) {
+        this.links = links;
+    }
+
+    public void addLink(Link link) {
+        this.links.add(link);
     }
 }

@@ -78,7 +78,10 @@ public class UserResource {
         List<UserDTO> usersDTO = users.stream()
                 .map(UserDTO::new)
                 .collect(Collectors.toList());
-        return Response.ok(usersDTO).build();
+        
+        List<UserDTO> userDTOS = userService.addSelfLinks(usersDTO, uriInfo);
+
+        return Response.ok(userDTOS).build();
     }
 
     @GET
@@ -90,7 +93,9 @@ public class UserResource {
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
 
-        UserDTO userDTO = new UserDTO(user, true);
+        UserDTO userDTO = userService.addSelfLink(new UserDTO(user, true), uriInfo);
+        userDTO.setFollowing(userService.addSelfLinks(userDTO.getFollowing(),uriInfo));
+
         return Response.ok(userDTO).build();
     }
 
@@ -103,7 +108,9 @@ public class UserResource {
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
 
-        UserDTO userDTO = new UserDTO(user, true);
+        UserDTO userDTO = userService.addSelfLink(new UserDTO(user, true), uriInfo);
+        userDTO.setFollowing(userService.addSelfLinks(userDTO.getFollowing(),uriInfo));
+
         return Response.ok(userDTO).build();
     }
 
@@ -146,8 +153,9 @@ public class UserResource {
                 .map(TweetDTO::new)
                 .collect(Collectors.toList());
 
-        GenericEntity tweets = new GenericEntity<List<TweetDTO>>(tweetDTO) {
-        };
+        GenericEntity tweets = new GenericEntity<List<TweetDTO>>(tweetDTO) {};
+        
+        
         return Response.ok(tweets).build();
     }
 

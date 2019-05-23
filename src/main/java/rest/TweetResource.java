@@ -29,8 +29,10 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 import rest.dto.TweetDTO;
 import rest.utils.RoleSecured;
 import service.TweetService;
@@ -43,10 +45,13 @@ import service.TweetService;
 @SecurityRequirement(name = "bearerAuth")
 @Stateless
 public class TweetResource {
-    
+
     @Inject
     private TweetService tweetService;
-    
+
+    @Context
+    UriInfo uriInfo;
+
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @RoleSecured({Role.USER, Role.MODERATOR, Role.ADMINISTRATOR})
@@ -55,18 +60,20 @@ public class TweetResource {
                 .map(TweetDTO::new)
                 .collect(Collectors.toList());
         
-        return Response.ok(tweetDTO).build();
+        List<TweetDTO> tweetDTOS = tweetService.addSelfLinks(tweetDTO, uriInfo);
+        
+        return Response.ok(tweetDTOS).build();
     }
-    
+
     @DELETE
     @Path("{uuid}")
     @RoleSecured({Role.MODERATOR, Role.ADMINISTRATOR})
     public Response removeTweet(@PathParam("uuid") String uuid) {
         Tweet tweet = this.tweetService.getTweet(uuid);
-        if(tweet == null) {
+        if (tweet == null) {
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
-        
+
         this.tweetService.remove(tweet);
         return Response.ok().build();
     }

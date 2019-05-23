@@ -17,8 +17,10 @@
 package rest.dto;
 
 import domain.HashTag;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.ws.rs.core.Link;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -26,26 +28,43 @@ import lombok.Setter;
  *
  * @author Yannick
  */
-@Getter @Setter
+@Getter
+@Setter
 public class HashTagDTO {
-    
+
     private String uuid;
     private String text;
-    
+
     private List<TweetDTO> tweets;
-    
+
+    private List<Link> links;
+
     public HashTagDTO(HashTag hashTag) {
         this.uuid = hashTag.getUuid();
         this.text = hashTag.getText();
+
+        this.links = new ArrayList<>();
     }
-    
+
     public HashTagDTO(HashTag hashTag, boolean fat) {
         this(hashTag);
-        
+
         if (fat) {
             this.tweets = hashTag.getTweets().stream()
                     .map(TweetDTO::new)
                     .collect(Collectors.toList());
         }
+    }
+
+    public List<Link> getLinks() {
+        return links;
+    }
+
+    public void setLinks(List<Link> links) {
+        this.links = links;
+    }
+
+    public void addLink(Link link) {
+        this.links.add(link);
     }
 }

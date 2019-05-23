@@ -20,9 +20,17 @@ import common.exceptions.UniqueConstraintViolationException;
 import dao.user.UserDao;
 import domain.User;
 import domain.enums.Role;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.ws.rs.core.Link;
+import javax.ws.rs.core.UriInfo;
+import rest.UserResource;
+import rest.dto.UserDTO;
 
 /**
  *
@@ -68,5 +76,32 @@ public class UserService {
 
     public void editUser(User newUser) {
         this.userDao.editUser(newUser);
+    }
+    
+    public UserDTO addSelfLink(UserDTO userDTO, UriInfo uriInfo){
+        URI selfUri = uriInfo.getBaseUriBuilder().path(UserResource.class).path(UserResource.class, "getUser").build(userDTO.getUuid());
+
+        Link.Builder linkBuilder = Link.fromUri(selfUri);
+        Link selfLink = linkBuilder.rel("self").build();
+
+        userDTO.addLink(selfLink);
+
+        return userDTO;
+    }
+
+    public List<UserDTO> addSelfLinks(List<UserDTO> userDTOS, UriInfo uriInfo){
+        List<UserDTO> userDTOSFinal = new ArrayList<>();
+        userDTOS.forEach(userDTO -> {
+            userDTOSFinal.add(addSelfLink(userDTO,uriInfo));
+        });
+        return userDTOSFinal;
+    }
+
+    public Set<UserDTO> addSelfLinks(Set<UserDTO> userDTOS, UriInfo uriInfo){
+        Set<UserDTO> userDTOSFinal = new HashSet<>();
+        userDTOS.forEach(userDTO -> {
+            userDTOSFinal.add(addSelfLink(userDTO,uriInfo));
+        });
+        return userDTOSFinal;
     }
 }
